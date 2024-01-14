@@ -42,7 +42,7 @@ jobs:
           cd teleinfo/
           mv platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
-          mv tasmota_type.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_type.h
+          mv tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_nrg_energy/xnrg_15_teleinfo.ino
           mv xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_drv_driver/xdrv_01_9_webserver.ino
           mv xsns_104_teleinfo_graph.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_sns_sensor/xsns_104_teleinfo_graph.ino
