@@ -9,7 +9,7 @@ on:
       - ./teleinfo
 
 env:
-  TASMOTA_VERSION: 13.2.0
+  TASMOTA_VERSION: 12.3.0
   
 jobs:
   build:
