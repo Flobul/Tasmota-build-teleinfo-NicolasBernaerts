@@ -62,7 +62,7 @@ jobs:
       - name: Unzip library Files
         run: |
           cd common/ && ls -lh
-          unzip -j -o ./ArduinoJson.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJSON
+          unzip -j -o ./ArduinoJson.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
           unzip -j -o ./FTPClientServer.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
           ls -lh ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/
           ls -lh ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
