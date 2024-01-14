@@ -64,14 +64,12 @@ jobs:
           git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
           git clone https://github.com/dplasa/FTPClientServer.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
 
-      - name: Get Version
-        id: version
-        run: |
-          EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h)
-          echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
-
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
+
+      - name: Get Version
+        id: version
+        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
 
       - name: Compile
         run: |
