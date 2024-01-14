@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - 'teleinfo/**'
+      - './teleinfo/**'
 
 env:
   TASMOTA_VERSION: 12.3.0
