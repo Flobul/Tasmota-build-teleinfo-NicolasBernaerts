@@ -39,7 +39,7 @@ jobs:
           mv user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
           mv tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
-          mv xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_drv_driver/xdrv_01_9_webserver.ino
+          mv xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
           mv xsns_104_teleinfo_graph.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_sns_sensor/xsns_104_teleinfo_graph.ino
           mv xsns_119_rte_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_sns_sensor/xsns_119_rte_server.ino
 
