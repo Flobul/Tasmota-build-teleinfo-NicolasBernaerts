@@ -6,7 +6,7 @@ on:
     branches:
       - master
     paths:
-      - './sensorvmc/**'
+      - './sensor-vmc/**'
 
 env:
   TASMOTA_VERSION: 13.2.0
@@ -34,14 +34,14 @@ jobs:
 
       - name: Get Version
         id: version
-        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./sensorvmc/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
+        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./sensor-vmc/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
 
       - name: Download Tasmota git
         run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
 
-      - name: Copy sensorvmc/ Files
+      - name: Copy sensor-vmc/ Files
         run: |
-          cd sensorvmc/ && ls -lh
+          cd sensor-vmc/ && ls -lh
           mv ./platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
           mv ./xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
