@@ -43,6 +43,8 @@ jobs:
       - name: List directory Files teleinfo
         run: pwd
       - name: Copy NicolasBernaerts Files
+        shell: bash
+        working-directory: ./
         run: |
           mv ./teleinfo/platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./teleinfo/platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
