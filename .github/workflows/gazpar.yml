@@ -1,4 +1,4 @@
-name: PlatformIO CI
+name: Gazpar Extension Compilation
 
 on:
   workflow_dispatch:
