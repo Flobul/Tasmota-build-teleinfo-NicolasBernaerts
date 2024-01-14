@@ -10,7 +10,7 @@ env:
   
 jobs:
   build:
-    name: Build
+    name: Build Teleinfo firmware
     runs-on: ubuntu-latest
 
     steps:
@@ -64,6 +64,8 @@ jobs:
           cd common/ && ls -lh
           unzip ./ArduinoJson.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJSON
           unzip ./FTPClientServer.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
+          ls -lh ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/
+          ls -lh ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
