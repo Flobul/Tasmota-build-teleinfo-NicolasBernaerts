@@ -7,8 +7,6 @@ on:
       - master
     paths:
       - 'teleinfo/**'
-    paths-ignore:
-      - '**.md'   
 
 env:
   TASMOTA_VERSION: 12.3.0
