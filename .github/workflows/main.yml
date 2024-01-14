@@ -38,12 +38,13 @@ jobs:
         run: ls -lh ./teleinfo
       - name: List directory Files file
         run: ls -lh teleinfo/platformio_override.ini && mv teleinfo/platformio_override.ini teleinfo/platformio_override2.ini
+      - name: List directory Files ./teleinfo
+        run: ls -lh ./teleinfo
       - name: List directory Files teleinfo
         run: pwd
       - name: Copy NicolasBernaerts Files
         run: |
-             cd
-             mv ./teleinfo/platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
+             mv teleinfo/platformio_override.ini "Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini"
              mv ./teleinfo/platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
              mv ./teleinfo/user_config_override.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h	
              mv ./common/partition/esp32_partition_4M_app1800k_fs1200k.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_4M_app1800k_fs1200k.csv
