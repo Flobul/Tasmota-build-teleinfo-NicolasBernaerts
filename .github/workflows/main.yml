@@ -83,7 +83,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/*
+            ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware*
           tag_name: "v${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
           name: "Release ${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
           body: "Release: ${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
