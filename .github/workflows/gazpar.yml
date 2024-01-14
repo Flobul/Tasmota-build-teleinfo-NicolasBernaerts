@@ -5,7 +5,8 @@ on:
   push:
     branches:
       - master
-      
+    paths:
+      - ./gazpar      
 env:
   TASMOTA_VERSION: 13.2.0
   
