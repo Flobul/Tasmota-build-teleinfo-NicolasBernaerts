@@ -37,7 +37,7 @@ jobs:
       - name: List directory Files ./teleinfo
         run: ls -lh ./teleinfo
       - name: List directory Files file
-        run: ls -lh teleinfo/platformio_override.ini
+        run: ls -lh teleinfo/platformio_override.ini && mv teleinfo/platformio_override.ini teleinfo/platformio_override2.ini
       - name: List directory Files teleinfo
         run: pwd
       - name: Copy NicolasBernaerts Files
