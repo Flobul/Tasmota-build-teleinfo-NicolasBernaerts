@@ -29,12 +29,6 @@ jobs:
         with:
           python-version: '3.9'
 
-
-      - name: Display Directory Structure Before Build
-        run: |
-          ls -lh * && pwd
-          grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")'  ./teleinfo/user_config_override.h
-
       - name: Get Version
         id: version
         run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
