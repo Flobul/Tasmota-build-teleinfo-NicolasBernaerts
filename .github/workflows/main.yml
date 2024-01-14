@@ -62,10 +62,10 @@ jobs:
       - name: Unzip library Files
         run: |
           cd common/ && ls -lh
-          unzip -j -o ./ArduinoJson.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
           unzip -j -o ./FTPClientServer.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
-          ls -lh ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/
-          ls -lh ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
+
+      - name: Unzip library Files
+        run: git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
