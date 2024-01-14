@@ -60,10 +60,9 @@ jobs:
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
 
       - name: Unzip library Files
-        run: git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
-
-      - name: Unzip library Files
-        run: git clone https://github.com/dplasa/FTPClientServer.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
+        run: |
+          git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
+          git clone https://github.com/dplasa/FTPClientServer.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
@@ -72,3 +71,14 @@ jobs:
         run: |
           cd Tasmota-${{ env.TASMOTA_VERSION }} && ls -lh
           pio run
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .pio/build/*/*.bin
+          tag_name: "v${{ env.TASMOTA_VERSION }}"
+          title: "Release ${{ env.TASMOTA_VERSION }}"
+          body: "Release: ${{ env.TASMOTA_VERSION }}}"
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
