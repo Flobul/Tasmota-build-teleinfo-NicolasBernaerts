@@ -72,13 +72,46 @@ jobs:
           cd Tasmota-${{ env.TASMOTA_VERSION }} && ls -lh
           pio run
 
+      - name: List firmware files
+        run: |
+          ls -lh .pio/build/*
+          ls -lh ./build_output
+
+      - name: Download Tasmota firmwares
+        uses: actions/download-artifact@v3
+        with:
+          name: firmware
+          path: ./mv_firmware
+
+      - name: Download safeboot firmwares
+        uses: actions/download-artifact@v3
+        with:
+          name: firmware_safeboot
+          path: ./mv_firmware
+
+      - name: Display structure of downloaded files
+        run: ls -R ./mv_firmware/
+      - name: Zip all map.gz files in one file -> map_all.zip
+        run: 7z a -mx=9 -tzip -xr'!.*' map_all.zip mv_firmware/map
+      - name: Release
+        uses: jason2866/action-gh-release@v1.2
+        #if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: ${{ github.run_number }}
+          files: |
+            ./mv_firmware/firmware/*
+            map_all.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: .pio/build/*/*.bin
+          files: |
+            .pio/build/*/*.bin
           tag_name: "v${{ env.TASMOTA_VERSION }}"
-          title: "Release ${{ env.TASMOTA_VERSION }}"
-          body: "Release: ${{ env.TASMOTA_VERSION }}}"
+          name: "Release ${{ env.TASMOTA_VERSION }}"
+          body: "Release: ${{ env.TASMOTA_VERSION }}"
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
