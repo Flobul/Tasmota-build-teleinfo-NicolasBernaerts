@@ -54,10 +54,10 @@ jobs:
           mv board/esp32s2_4M1200k.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2_4M1200k.json
           mv board/denkyd4_8M4M-safeboot.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4_8M4M-safeboot.json
           mv board/esp32s3_16M12M-safeboot.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3_16M12M-safeboot.json
-          mv xdrv_94_ip_address.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_drv_driver/xdrv_94_ip_address.ino
-          mv xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_drv_driver/xdrv_96_ftp_server.ino
-          mv xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_drv_driver/xdrv_97_tcp_server.ino
-          mv xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_drv_driver/xdrv_98_esp32_board.ino
+          mv xdrv_94_ip_address.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_address.ino
+          mv xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_96_ftp_server.ino
+          mv xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
+          mv xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
           unzip ./ArduinoJSON.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJSON
           unzip .FTPClientServer.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
 
