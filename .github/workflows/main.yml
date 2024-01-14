@@ -46,9 +46,9 @@ jobs:
       - name: Copy common/ Files
         run: |
           cd common/
-          mv ./partition/esp32_partition_4M_app1800k_fs1200k.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_4M_app1800k_fs1200k.csv
-          mv ./partition/esp32_partition_8M_app3M_fs4M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_8M_app3M_fs4M.csv
-          mv ./partition/esp32_partition_16M_app3M_fs12M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_16M_app3M_fs12M.csv
+          mv ./partition/esp32_partition_4M_app1800k_fs1200k.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_4M_app1800k_fs1200k.csv
+          mv ./partition/esp32_partition_8M_app3M_fs4M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_8M_app3M_fs4M.csv
+          mv ./partition/esp32_partition_16M_app3M_fs12M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_16M_app3M_fs12M.csv
           mv ./board/esp8266_16M14M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266_16M14M.json
           mv board/esp32_4M1200k.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32_4M1200k.json
           mv board/esp32s2_4M1200k.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2_4M1200k.json
