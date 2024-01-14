@@ -72,11 +72,6 @@ jobs:
           cd Tasmota-${{ env.TASMOTA_VERSION }} && ls -lh
           pio run
 
-      - name: List firmware files
-        run: |
-          ls -lh .pio/build/*
-          ls -lh ./build_output
-
       - name: Download Tasmota firmwares
         uses: actions/download-artifact@v3
         with:
