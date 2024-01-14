@@ -14,6 +14,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
       - name: Download Tasmota git
         run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
         
@@ -45,21 +60,6 @@ jobs:
              unzip ./common/ArduinoJSON.zip -d ${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJSON
              unzip ./common/FTPClientServer.zip -d ${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
 
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.platformio/.cache
-          key: ${{ runner.os }}-pio
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
