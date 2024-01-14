@@ -33,20 +33,15 @@ jobs:
         run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
         
       - name: List directory Files
-        run: ls -lh .
-      - name: List directory Files ./teleinfo
-        run: ls -lh ./teleinfo
-      - name: List directory Files file
-        run: ls -lh teleinfo/platformio_override.ini && mv teleinfo/platformio_override.ini teleinfo/platformio_override2.ini
-      - name: List directory Files ./teleinfo
-        run: ls -lh ./teleinfo
-      - name: List directory Files teleinfo
-        run: pwd
+        run: |
+          ls -lh .
+          ls -lh ./teleinfo
+          pwd
       - name: Copy NicolasBernaerts Files
         run: |
           cd teleinfo
           mv platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
-          mv ./teleinfo/user_config_override.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h	
+          mv user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h	
           mv ./common/partition/esp32_partition_4M_app1800k_fs1200k.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_4M_app1800k_fs1200k.csv
           mv ./common/partition/esp32_partition_8M_app3M_fs4M.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_8M_app3M_fs4M.csv
           mv ./common/partition/esp32_partition_16M_app3M_fs12M.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partition/esp32_partition_16M_app3M_fs12M.csv
