@@ -60,12 +60,10 @@ jobs:
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
 
       - name: Unzip library Files
-        run: |
-          cd common/ && ls -lh
-          unzip -j -o ./FTPClientServer.zip -d ../Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
+        run: git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
 
       - name: Unzip library Files
-        run: git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
+        run: git clone https://github.com/dplasa/FTPClientServer.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
