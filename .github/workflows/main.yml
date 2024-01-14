@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Download Tasmota git
         run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
+        
+      - name: List directory Files
+        run: ls -lh
 
       - name: Copy NicolasBernaerts Files
         run: |
