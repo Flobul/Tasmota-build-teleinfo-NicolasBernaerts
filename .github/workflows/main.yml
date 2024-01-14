@@ -59,7 +59,7 @@ jobs:
           mv ./xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
 
-      - name: Unzip library Files
+      - name: Get git libraries
         run: |
           git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
           git clone https://github.com/dplasa/FTPClientServer.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
@@ -78,38 +78,14 @@ jobs:
           cd Tasmota-${{ env.TASMOTA_VERSION }} && ls -lh
           pio run
 
-      - name: Download Tasmota firmwares
-        uses: actions/download-artifact@v3
-        with:
-          name: firmware
-          path: ./mv_firmware
-
-      - name: Download safeboot firmwares
-        uses: actions/download-artifact@v3
-        with:
-          name: firmware_safeboot
-          path: ./mv_firmware
-
       - name: Display structure of downloaded files
-        run: ls -R ./mv_firmware/
-      - name: Zip all map.gz files in one file -> map_all.zip
-        run: 7z a -mx=9 -tzip -xr'!.*' map_all.zip mv_firmware/map
-      - name: Release
-        uses: jason2866/action-gh-release@v1.2
-        #if: startsWith(github.ref, 'refs/tags/')
-        with:
-          tag_name: ${{ github.run_number }}
-          files: |
-            ./mv_firmware/firmware/*
-            map_all.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ls -lR ./build_output/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            .pio/build/*/*.bin
+            ./build_output/*
           tag_name: "v${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
           name: "Release ${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
           body: "Release: ${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
