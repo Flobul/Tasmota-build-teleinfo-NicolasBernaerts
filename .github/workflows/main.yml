@@ -46,6 +46,7 @@ jobs:
         shell: bash
         working-directory: ./
         run: |
+          mkdir -p ./Tasmota-${{ env.TASMOTA_VERSION }}
           mv ./teleinfo/platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./teleinfo/platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./teleinfo/user_config_override.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h	
