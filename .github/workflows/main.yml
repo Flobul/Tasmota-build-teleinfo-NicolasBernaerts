@@ -67,7 +67,7 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")'  .teleinfo/user_config_override.h)
+          EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h)
           echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
 
       - name: Install PlatformIO Core
