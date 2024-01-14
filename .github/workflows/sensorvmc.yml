@@ -1,0 +1,83 @@
+name: SensorVMC Extension Compilation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - './sensorvmc/**'
+
+env:
+  TASMOTA_VERSION: 13.2.0
+  
+jobs:
+  build:
+    name: Build Gazpar firmware
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: ${{ runner.os }}-pio
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Get Version
+        id: version
+        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./sensorvmc/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
+
+      - name: Download Tasmota git
+        run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
+
+      - name: Copy sensorvmc/ Files
+        run: |
+          cd sensorvmc/ && ls -lh
+          mv ./platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
+          mv ./user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
+          mv ./xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
+          mv ./xdrv_98_vmc.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_vmc.ino          
+          mv ./xsns_121_vmc.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_121_vmc.ino
+
+      - name: Copy common/ Files
+        run: |
+          cd common/ && ls -lh
+          mv ./board/esp8266_16M14M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266_16M14M.json
+          mv ./xdrv_50_filesystem_cfg_csv.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_50_filesystem_cfg_csv.ino
+          mv ./xdrv_94_ip_address.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_address.ino
+          mv ./xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_96_ftp_server.ino
+          mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
+          mv ./xsns_120_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_120_timezone.ino
+          mv ./xsns_99_generic_sensor.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
+
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+
+      - name: Compile
+        run: |
+          cd Tasmota-${{ env.TASMOTA_VERSION }} && ls -lh
+          pio run
+
+      - name: Display structure of downloaded files
+        run: ls -lR .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware*
+          tag_name: "Tasmota-v${{ env.TASMOTA_VERSION }}-Sensorvmc-${{ env.EXT_VERSION }}"
+          name: "Release Tasmota ${{ env.TASMOTA_VERSION }} - Sensorvmc-${{ env.EXT_VERSION }}"
+          body: "Release Tasmota ${{ env.TASMOTA_VERSION }} - Sensorvmc-${{ env.EXT_VERSION }}"
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
