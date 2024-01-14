@@ -5,7 +5,9 @@ on:
   push:
     branches:
       - master
-      
+    paths:
+      - ./teleinfo
+
 env:
   TASMOTA_VERSION: 13.2.0
   
