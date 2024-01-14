@@ -67,6 +67,9 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
+      - name: Display Directory Structure Before Build
+        run: grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")'  ./teleinfo/user_config_override.h
+
       - name: Get Version
         id: version
         run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
