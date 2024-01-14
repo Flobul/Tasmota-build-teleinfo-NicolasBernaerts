@@ -87,9 +87,9 @@ jobs:
         with:
           files: |
             ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware*
-          tag_name: "v${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
-          name: "Release ${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
-          body: "Release: ${{ env.TASMOTA_VERSION }}-${{ env.EXT_VERSION }}"
+          tag_name: "Tasmota-v${{ env.TASMOTA_VERSION }}-TeleinfoExt-${{ env.EXT_VERSION }}"
+          name: "Release Tasmota ${{ env.TASMOTA_VERSION }} - TeleinfoExt-${{ env.EXT_VERSION }}"
+          body: "Release Tasmota ${{ env.TASMOTA_VERSION }} - TeleinfoExt-${{ env.EXT_VERSION }}"
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
