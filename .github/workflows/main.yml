@@ -77,7 +77,7 @@ jobs:
           pio run
 
       - name: Display structure of downloaded files
-        run: ls -lR ./build_output/
+        run: ls -lR .
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
