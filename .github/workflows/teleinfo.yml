@@ -30,7 +30,14 @@ on:
           - 9.5.0
           - 9.4.0
           - 9.3.1
-
+      addFiles:
+        description: 'True to add files below'
+        required: true
+        type: boolean
+      files:
+        description: 'Command line to add files'
+        required: true
+        type: string
   push:
     branches:
       - master
@@ -94,6 +101,10 @@ jobs:
           mv ./xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_96_ftp_server.ino
           mv ./xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
+
+      - name: Add extra file
+        if:  ${{ inputs.addFiles }} 
+        run: ${{ inputs.files }} 
 
       - name: Get git libraries
         run: |
