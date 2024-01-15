@@ -57,7 +57,7 @@ jobs:
           mv ./xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_96_ftp_server.ino
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
           mv ./xsns_120_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_120_timezone.ino
-          mv ./xsns_99_generic_sensor.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
+          mv ./xsns_98_generic_sensor.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_98_generic_sensor.ino
 
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
