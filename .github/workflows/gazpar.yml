@@ -3,27 +3,33 @@ name: Gazpar Extension Compilation
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
+      tasmotaVer:
+        description: 'Major Tasmota Version'
+        required: false
+        default: '12.3.1'
         type: choice
         options:
-          - info
-          - warning
-          - debug
-      print_tags:
-        description: 'True to print to STDOUT'
-        required: true
-        type: boolean
-      tags:
-        description: 'Test scenario tags'
-        required: true
-        type: string
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true
+          - 13.3.0
+          - 13.2.0
+          - 13.1.0
+          - 13.0.0
+          - 12.5.0
+          - 12.4.0
+          - 12.3.1
+          - 12.2.0
+          - 12.1.1
+          - 12.1.0
+          - 12.0.2
+          - 12.0.1
+          - 12.0.0
+          - 11.1.0
+          - 11.0.0
+          - 10.1.0
+          - 10.0.0
+          - 9.5.0
+          - 9.4.0
+          - 9.3.1
+
   push:
     branches:
       - master
@@ -32,7 +38,7 @@ on:
   
 
 env:
-  TASMOTA_VERSION: 12.3.1
+  TASMOTA_VERSION: ${{ inputs.tasmotaVer }}
   
 jobs:
   build:
