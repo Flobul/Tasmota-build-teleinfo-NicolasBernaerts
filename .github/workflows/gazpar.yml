@@ -54,7 +54,6 @@ jobs:
           mv ./xdrv_50_filesystem_cfg_csv.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_50_filesystem_cfg_csv.ino
           mv ./xdrv_94_ip_address.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_address.ino
           mv ./xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_96_ftp_server.ino
-          mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
           mv ./xsns_120_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_120_timezone.ino
 
       - name: Get git libraries
