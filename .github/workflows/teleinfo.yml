@@ -6,7 +6,7 @@ on:
       tasmotaVer:
         description: 'Major Tasmota Version'
         required: false
-        default: '12.3.0'
+        default: '13.2.0'
         type: choice
         options:
           - 13.3.1
