@@ -109,13 +109,13 @@ jobs:
           pio run
 
       - name: Display structure of downloaded files
-        run: ls -lR .
+        run: ls -lR ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware/*
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware*
+            ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware/*
           tag_name: "Tasmota-v${{ env.TASMOTA_VERSION }}-TeleinfoExt-${{ env.EXT_VERSION }}"
           name: "Release Tasmota ${{ env.TASMOTA_VERSION }} - TeleinfoExt-${{ env.EXT_VERSION }}"
           body: "Release Tasmota ${{ env.TASMOTA_VERSION }} - TeleinfoExt-${{ env.EXT_VERSION }}"
