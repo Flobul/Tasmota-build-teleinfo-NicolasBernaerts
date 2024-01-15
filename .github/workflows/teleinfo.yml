@@ -2,6 +2,35 @@ name: Teleinfo Extension Compilation
 
 on:
   workflow_dispatch:
+    inputs:
+      tasmotaVer:
+        description: 'Major Tasmota Version'
+        required: false
+        default: '12.3.0'
+        type: choice
+        options:
+          - 13.3.1
+          - 13.3.0
+          - 13.2.0
+          - 13.1.0
+          - 13.0.0
+          - 12.5.0
+          - 12.4.0
+          - 12.3.1
+          - 12.2.0
+          - 12.1.1
+          - 12.1.0
+          - 12.0.2
+          - 12.0.1
+          - 12.0.0
+          - 11.1.0
+          - 11.0.0
+          - 10.1.0
+          - 10.0.0
+          - 9.5.0
+          - 9.4.0
+          - 9.3.1
+
   push:
     branches:
       - master
@@ -9,7 +38,7 @@ on:
       - './teleinfo/**'
 
 env:
-  TASMOTA_VERSION: 12.3.0
+  TASMOTA_VERSION: ${{ inputs.tasmotaVer }}
   
 jobs:
   build:
