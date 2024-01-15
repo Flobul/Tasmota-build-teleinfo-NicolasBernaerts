@@ -32,11 +32,11 @@ on:
           - 9.3.1
       addFiles:
         description: 'True to add files below'
-        required: true
+        required: false
         type: boolean
       files:
         description: 'Command line to add files'
-        required: true
+        required: false
         type: string
   push:
     branches:
