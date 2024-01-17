@@ -59,7 +59,9 @@ jobs:
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
           mv ./xsns_120_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_120_timezone.ino
           mv ./xsns_98_generic_sensor.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_98_generic_sensor.ino
-    
+          mv ./xsns_122_ld1115.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_122_ld1115.ino
+          mv ./xsns_123_ld1125.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_123_ld1125.ino
+
       - name: Get git libraries
         run: |
           git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
