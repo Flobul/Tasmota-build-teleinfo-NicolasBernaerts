@@ -9,7 +9,7 @@ on:
       - './sensor-vmc/**'
 
 env:
-  TASMOTA_VERSION: 13.0.0
+  TASMOTA_VERSION: 12.3.1
   
 jobs:
   build:
