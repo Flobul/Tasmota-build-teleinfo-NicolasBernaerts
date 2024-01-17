@@ -47,6 +47,7 @@ jobs:
           mv ./xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
           mv ./xdrv_98_vmc.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_vmc.ino          
           mv ./xsns_121_vmc.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_121_vmc.ino
+          mv ./tasmota.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota.ino
 
       - name: Copy common/ Files
         run: |
