@@ -60,7 +60,7 @@ jobs:
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
           mv ./xsns_98_generic_sensor.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
           sed -i 's/#define XSNS_98[[:space:]]*98/#define XSNS_99                       99/' ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
-          sed -i 's/#define XDRV_98[[:space:]]*98/#define XDRV_98                       99/' ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
+          sed -i 's/#define XDRV_98[[:space:]]*98/#define XDRV_99                       99/' ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
           sed -i 's/bool Xsns98 (uint32_t function)/bool Xsns99 (uint32_t function)/' ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
           sed -i 's/bool Xdrv98 (uint32_t function)/bool Xdrv99 (uint32_t function)/' ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_generic_sensor.ino
           mv ./xsns_102_ld2410.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_102_ld2410.ino
