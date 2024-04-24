@@ -1,127 +1,129 @@
-# Teleinfo Tasmota firmware (with RTE Tempo, Pointe & Ecowatt)
+# Firmware Tasmota Teleinfo
 
-⚠️ From **version 13** onward, partitionning has changed on **ESP32 family**, it uses new **safeboot** partitionning.
+⚠️ Depuis la **version 13**, le partitionnement a évolué pour la famille des **ESP32**. Il utilise maintenant le partitionnement standard **safeboot**. Si vous faites une mise à jour ESP32 depuis une version plus ancienne, Vous devez faire un flash **serial**. Si vous faites une mise à jour **OTA** vous pourrez rencontrer des dysfonctionnements.
 
-If you upgrade ESP32 from previous version, you need to do a serial flash in **erase** mode. If you do OTA, you may encounter serious instabilities. Of course you need to do it once. You'll be able to update futur versions using OTA.
+A partir du moment où vous disposez d'une version **13+**, vous pouvez bien entendu réaliser les mises à jour en mode **OTA**. Le partitionnement des **ESP8266** n'a pas changé.
 
-ESP8266 family partitionning hasn't changed.
+Le **changelog** général est disponible dans le fichier **user_config_override.h**
 
 ## Presentation
 
-This evolution of **Tasmota 13.2.0** firmware has been enhanced to :
-  * handle France energy meters known as **Linky** using **Teleinfo** protocol
-  * publish RTE **Tempo** data
-  * publish RTE **Pointe** data
-  * publish RTE **Ecowatt** data
+Cette évolution du firmware **Tasmota 13.4.0** permet de :
+  * gérer le flux **Teleinfo** des compteurs français (**Linky**, **PME/PMI** et **Emeraude**)
+  * publier les données sous **Domoticz**, **Home Assistant** et **Homie**
+  * s'abonner aux API RTE **Tempo**, **Pointe** et **Ecowatt**
 
-This firmware has been developped and tested on  :
-  * **Sagem Classic Monophase** with TIC **Historique**
-  * **Linky Monophase** with TIC **Historique** & **Standard**
-  * **Linky Triphase** with TIC **Historique** & **Standard**
-  * **Ace6000 Triphase** with TIC **PME/PMI**
+Ce firmware a été développé et testé sur les compteurs suivants :
+  * **Sagem Classic monophase** en TIC **Historique**
+  * **Linky monophase** en TIC **Historique** & **Standard**
+  * **Linky triphase** en TIC **Historique** & **Standard**
+  * **Ace6000 triphase** en TIC **PME/PMI**
+  * **Emeraude** en TIC **Emeraude 2 quadrands**
 
-It has been compiled and tested on the following devices :
-  * **ESP8266** 1Mb
-  * **ESP12F** 4Mb and 16Mb
-  * **ESP32** 4Mb (safeboot)
-  * **Denky D4** 8Mb (safeboot)
-  * **ESP32S2** 4Mb (safeboot)
-  * **ESP32S3** 16Mb (safeboot)
+La réception **TIC** intègre une correction d'erreur basée sur le checksum afin de ne traiter que des données fiables.
 
-This firmware also provides :
-  * a TCP server to live stream **teleinfo** data
-  * a FTP server to easily retrieve graph data
+Il a été compilé et testé sur les ESP suivants :
+  * **ESP8266** 1Mb, 4Mb et 16Mb
+  * **ESP32** 4Mb et **ESP32 Denky D4** 8Mb
+  * **ESP32C3** 4Mb
+  * **ESP32C6 Winky** 4Mb (auto-alimenté par le compteur)
+  * **ESP32S2** 4Mb
+  * **ESP32S3** 4Mb et 16Mb
 
-Pre-compiled versions are available in the [**binary**](./binary) folder.
+Ce firmware fournit également :
+  * un serveur intégré **TCP** pour diffuser en temps réel les données reçues du compteur
+  * un serveur intégré **FTP** pour récupérer les fichiers historiques
 
-## Teleinfo
+Des versions pré-compilées sont disponibles dans le répertoire [**binary**](./binary).
 
-Please note that it is a completly different implementation than the one published early 2020 by Charles Hallard and actually on the official Tasmota repository. 
+Ce firmware n'est pas le firmware officiel **Teleinfo** de **Tasmota**. C'est une implémentation complètement différente de celle publiée en 2020 par Charles Hallard. 
 
-This tasmota firmware handles consommation and production modes. Data are published thru some specific JSON sections :
-  * Consommation is published thru default **ENERGY** and specific **METER** sections
-  * Production is published thru specific **PROD** section
-  * Alerts (Tempo / EJP change, overload, over voltage, ...) are published under **ALERT** section
-  * You can also publish a specific **TIC** section to have all Teleinfo keys of last received message
+Il gère les compteurs en mode consommation et production. 
 
-Some of these firmware versions are using a LittleFS partition to store graph data. Il allows to keep historical data over reboots.
-To take advantage of this feature, make sure to follow partitioning procedure given in the **readme** of the **binary** folder.
+Ce firmware gère les données suivantes :
+  * Tension (**V**)
+  * Courant (**A**)
+  * Puissance instantanée (**VA**)
+  * Puissance active (**W**)
+  * Facteur de puissance (**Cosφ**)
+  * Compteurs quotidiens et de période (**Wh**)
 
-It manages :
-  * Voltage (**V**)
-  * Current (**A**)
-  * Instant Power (**VA** and **W**)
-  * Active Power total (**Wh**)
-  * Power Factor (**Cosφ**), calculated from Instant Power (VA) and meter Total (Wh)
-
-This firmware provides some extra Web page on the device :
-  * **/tic** : real time display of last received Teleinfo message
-  * **/graph** : live, daily and weekly graphs
-  * **/conso** : yearly consumption data
-  * **/prod** : yearly production
+Il fournit des pages web spécifiques :
+  * **/tic** : suivi en temps réel des données réçues
+  * **/graph** : graph en temps réel des données du compteur
+  * **/conso** : suivi des consommations
+  * **/prod** : suivi de la production
   
-If you are using a LittleFS version, you'll also get peak apparent power and peak voltage on the graphs.
+Si votre compteur est en mode historique, la tension est forcée à 230V.
 
-If your linky in in historic mode, it doesn't provide instant voltage. Voltage is then forced to 230V.
-
-If you are using an **ESP32** board with Ethernet, you can use the wired connexion by selection the proper board model in **Configuration/ESP32 board**.
-
-
-If you want to remove default Tasmota Energy display on the main page, you just need to run this console command :
+Si vous souhaitez supprimer l'affichage des données **Energy** sur la page d'accueil, vous devez passer la commande suivante en console :
 
     websensor3 0
 
-Teleinfo protocol is described in [this document](https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_54E.pdf)
+Le protocole **Teleinfo** est décrit dans [ce document](https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_54E.pdf)
 
-#### MQTT data
+## Publication MQTT
 
-Standard **ENERGY** section is published during **Telemetry**.
+En complément de la section officielle **ENERGY**, les sections suivantes peuvent être publiées :
+  * **METER** : données normalisées de consommation et production en temps réel
+  * **ALERT** : alertes publiées dans les messages STGE (changement Tempo / EJP, surpuissance & survoltage)
+  * **CONTRACT** : données du contrat intégrant les compteurs de périodes en Wh
+  * **CAL** : calendrier consolidé entre la publication compteur et les données RTE reçues (Tempo, Pointe et/ou Ecowatt)
+  * **RELAY** : relais virtuels publiés par le compteur
+  * **TIC** : etiquettes et données brutes reçues depuis le compteur
 
-You can also publish energy data under 2 different sections :
-  * **TIC** : Teleinfo data are publish as is
-  * **METER** : Consommation energy data are in a condensed form
-  * **PROD** : Production energy data
-  * **ALERT** : Alert flags (Tempo, EJP, Overload, Over voltage, ...)
+Toutes ces publications sont activables à travers la page **Configuration Teleinfo**.
 
-These options can be enabled in **Configure Teleinfo** page.
+Données de **consommation** publiées dans la section **METER** :
 
-Here are some example of what you'll get if you publish **TIC** section :
-  * **ADCO**, **ADCS** = contract number
-  * **ISOUSC** = max contract current per phase 
-  * **SSOUSC** = max contract power per phase
-  * **IINST**, **IINST1**, **IINST2**, **IINST3** = instant current per phase
-  * **ADIR1**, **ADIR2**, **ADIR3** = overload message
-  * ...
+  * **PH** = nombre de phases (1 ou 3)
+  * **PSUB** = puissance apparente (VA) maximale par phase dans le contrat
+  * **ISUB** = courant (A) maximal par phase dans le contrat 
+  * **PMAX** = puissance apparente (VA) maximale par phase intégrant le pourcentage acceptable
+  * **I** = courant instantané (A) global
+  * **P** = puissance instantanée (VA) globale
+  * **W** = puissance active (W) globale
+  * **C** = facteur de puissance (cos φ)
+  * **TDAY** = Total consommé aujourd'hui (Wh)
+  * **YDAY** = Total consommé hier (Wh)
 
-Here are some example of what you'll get if you publish **METER** section :
-  * **PH** = number of phases
-  * **PSUB** = power per phase in the contract (VA) 
-  * **ISUB** = current per phase in the contract 
-  * **PMAX** = maximum power per phase including an accetable % of overload (VA)
-  * **I** = total instant current (on all phases)
-  * **P** = total instant apparent power (on all phases)
-  * **W** = total instant active power (on all phases)
-  * **Ix** = instant current on phase **x** 
-  * **Ux** = instant voltage on phase **x** 
-  * **Px** = instant apparent power on phase **x** 
-  * **Wx** = instant active power on phase **x** 
-  * **Cx** = current calculated power factor (cos φ) on phase **x** 
+Données de **consommation** par **phase** publiées dans la section **METER** :
 
-Here is what you'll get in **PROD** section if your Linky is in production mode :
-  * **VA**  = instant apparent power
-  * **W**   = instant active power 
-  * **COS** = current calculated power factor (cos φ)
+  * **Ix** = courant instantané (A) sur la phase **x** 
+  * **Ux** = tension (V) sur la phase **x** 
+  * **Px** = puissance instantanée (VA) sur la phase **x** 
+  * **Wx** = puissance active (W) sur la phase **x**
 
-MQTT result should look like that :
+Données de **production** publiées dans la section **METER** :
 
-    compteur/tele/SENSOR = {"Time":"2021-03-13T09:20:26","ENERGY":{"TotalStartTime":"2021-03-13T09:20:26","Total":7970.903,"Yesterday":3.198,"Today":6.024,"Period":63,"Power":860,"Current":4.000},"IP":"192.168.xx.xx","MAC":"50:02:91:xx:xx:xx"}
-    compteur/tele/SENSOR = {"Time":"2021-03-13T09:20:30","TIC":{"ADCO":"061964xxxxxx","OPTARIF":"BASE","ISOUSC":"30","BASE":"007970903","PTEC":"TH..","IINST":"003","IMAX":"090","PAPP":"00780","HHPHC":"A","MOTDETAT":"000000","PHASE":1,"SSOUSC":"6000","IINST1":"3","SINSTS1":"780"}}
-    compteur/tele/SENSOR = {"Time":"2023-03-10T13:53:42","METER":{"PH":1,"ISUB":45,"PSUB":9000,"PMAX":8910,"U1":235,"P1":1470,"W1":1470,"I1":6.0,"C1":1.00,"P":1470,"W":1470,"I":6.0}}
-    compteur/tele/SENSOR = {"Time":"2023-03-10T13:54:42","PROD":{"VA":1470,"W":1470,"COS":1.00}}
+  * **PP** = puissance instantanée (VA) produite
+  * **PW** = puissance active (W) produite
+  * **PC** = facteur de puissance (cos φ) de la production
+  * **PTDAY** = Total produit aujourd'hui (Wh)
+  * **PYDAY** = Total produit hier (Wh)
 
-#### Commands
+Voici les données publiées dans la section **CAL** :
+  * **lv** = niveau de la période actuelle (0 inconnu, 1 bleu, 2 blanc, 3 rouge)
+  * **hp** = type de la période courante (0:heure creuse, 1 heure pleine)
+  * **today** = section avec le niveau et le type de chaque heure du jour
+  * **tomorrow** = section avec le niveau et le type de chaque heure du lendemain
 
-This Teleinfo firmware can be configured thru some **EnergyConfig** console commands :
+Données publiées dans la section **RELAY** :
+  * **R1** = état du relai virtual n°1 (0:ouvert, 1:fermé)
+  * **R2** = état du relai virtual n°2 (0:ouvert, 1:fermé)
+  * .. 
+
+Données publiées dans la section **ALERT** :
+  * **Load** = indicateur de surconsommation (0:pas de pb, 1:surconsommation)
+  * **Volt** = indicateur de surtension (0:pas de pb, 1:au moins 1 phase est en surtension)
+  * **Preavis** = niveau du prochain préavis (utilisé en Tempo & EJP)
+  * **Label** = Libellé du prochain préavis
+
+En complément des données de base du contrat, la section **CONTRAT** liste l'ensemble des périodes dans votre contrat. Seules les périodes avec un total de consommation différent de **0** sont publiées.
+
+## Commands
+
+Ce firmware propose un certain nombre de commandes **EnergyConfig** spécifiques disponibles en mode console :
 
     EnergyConfig Teleinfo parameters :
       historique      set historique mode at 1200 bauds (needs restart)
@@ -138,37 +140,54 @@ This Teleinfo firmware can be configured thru some **EnergyConfig** console comm
       maxday=110      graph max total per day (Wh)
       maxmonth=2000   graph max total per month (Wh)
 
-You can use few commands at once :
+Vous pouvez passer plusieurs commandes en même temps :
 
       EnergyConfig percent=110 nbday=8 nbweek=12
 
-#### Log files
+## Partition LittleFS
 
-If you run this firmware on an ESP having a LittleFS partition, it will generate 3 types of energy logs :
-  * **teleinfo-day-nn.csv** : average values daily file with a record every ~5 mn (**00** is today's log, **01** yesterday's log, ...)
-  * **teleinfo-week-nn.csv** : average values weekly file with a record every ~30 mn (**00** is current week's log, **01** is previous week's log, ...)
-  * **teleinfo-year-yyyy.csv** : Consumption kWh total yearly file with a line per day and detail of hourly total for each day.
-  * **production-year-yyyy.csv** : Production kWh total yearly file with a line per day and detail of hourly total for each day.
+Certaines variantes de ce firmware (ESP avec au moins 4Mo de ROM) utilisent une partition **LittleFS** pour stocker les données historisées qui servent à générer les graphs de suivi. Lorsque vous souhaitez utiliser cette fonctionnalité, vérifier que vous flashez bien l'ESP en mode série la première fois afin de modifier le partitionnement.
 
-Every CSV file includes a header.
+Pour les versions **LittleFS**, les graphs affichent en complément la tension et la puissances crête.
 
-These files are used to generate all graphs other than **Live** ones.
+Avec une partition LittleFS, 4 familles de fichiers sont générées :
+  * **teleinfo-day-nn.csv** : valeurs quotidiennes enregistrées toutes les 5 mn (**00** aujourd'hui, **01** hier, ...)
+  * **teleinfo-week-nn.csv** : valeurs hebdomadaires enregistrées toutes les 30 mn (**00** semaine courante, **01** semaine précédente, ...)
+  * **teleinfo-year-yyyy.csv** : Compteurs de consommation annuels
+  * **production-year-yyyy.csv** : Compteur de production annuel
 
-## RTE Tempo, Pointe and Ecowatt
+Chacun de ces fichiers inclue un entête.
 
-This evolution of Tasmota firmware allows to collect [**France RTE**](https://data.rte-france.com/) data thru their Web Services :
+## Calendriers RTE : Tempo, Pointe & Ecowatt
+
+Ce firmware permet également de s'abonner aux calendriers publiés par [**RTE**](https://data.rte-france.com/) :
   * **Tempo**
   * **Pointe**
   * **Ecowatt**
-These data are then published thru MQTT.
+
+Cette fonctionnalité n'est disponible que sur les **ESP32**. Vous devez tout d'abord créer un compte sur le site **RTE** [https://data.rte-france.com/] Ensuite vous devez activer l'un ou l'autre des API suivantes :
+  * **Tempo**
+  * **Demand Response Signal**
+  * **Ecowatt**
+
+![RTE applications](./screen/rte-application-list.png) 
+
+Ces calendriers sont utilisés pour générer le calendrier de la journée et du lendemain.
 
 ![RTE applications](./screen/tasmota-rte-display.png)
 
-It is only enabled on **ESP32** familiies, as SSL connexions are using too much memory for ESP8266.
+Ils sont utilisés suivant les règles suivantes :
+  * si calendrier **Tempo** activé, publication de ses données
+  * sinon, si calendrier **Pointe** activé, publication de ses données
+  * sinon, publication des données de calendrier fournies par le compteur (**PJOURN+1**)
 
-RTE configuration is saved under **rte.cfg** at the root of littlefs partition.
+En complément, si le calendrier **Ecowatt** est activé, les alertes sont publiées suivant les règles suivantes :
+  * alerte **orange**  = jour **blanc**
+  * alerte **rouge**  = jour **rouge**
 
-To get all available commands, just run **rte_help** in console :
+La configuration est stockée dans le fichier **rte.cfg**.
+
+Voici la liste de toutes les commandes RTE disponibles en mode console :
 
     HLP: RTE server commands
     RTE global commands :
@@ -177,49 +196,42 @@ To get all available commands, just run **rte_help** in console :
      - rte_sandbox <0/1>  = set sandbox mode (0/1)
     Ecowatt commands :
      - eco_enable <0/1>   = enable/disable ecowatt server
+     - eco_display <0/1>  = display ecowatt calendra in main page
      - eco_version <4/5>  = set ecowatt API version to use
      - eco_update         = force ecowatt update from RTE server 
      - eco_publish        = publish ecowatt data now
     Tempo commands :
-     - tempo_enable <0/1> = enable/disable tempo server
-     - tempo_update       = force tempo update from RTE server
-     - tempo_publish      = publish tempo data now
+     - tempo_enable <0/1>  = enable/disable tempo server
+     - tempo_display <0/1> = display tempo calendra in main page
+     - tempo_update        = force tempo update from RTE server
+     - tempo_publish       = publish tempo data now
     Pointe commands :
      - pointe_enable <0/1> = enable/disable pointe period server
+     - pointe_display <0/1 = display pointe calendra in main page
      - pointe_update       = force pointe period update from RTE server
      - pointe_publish      = publish pointe period data now
-  
-You first need to create **RTE account** from RTE site [https://data.rte-france.com/]
 
-Then enable **Tempo**, **Demand Response Signal** and/or **Ecowatt** application to be able to access its API.
-
-![RTE applications](./screen/rte-application-list.png) 
-
-Once your applications have been enabled, copy and declare your **private Base64 key** in console mode :
+Une fois votre compte créé chez RTE et les API activées, vous devez déclarer votre **private Base64 key** en mode console :
 
     rte_key your_rte_key_in_base64
 
-You can then enable **Tempo**, **Pointe**  and/or **Ecowatt** data collection : 
+Il ne vous reste plus qu'à activer les modules correspondant aux API RTE : 
 
-    eco_enable 1
     tempo_enable 1
     pointe_enable 1
+    eco_enable 1
 
-By default, Ecowatt API is version 5. If you have enabled version 4, you can force it with :
-
-    eco_version 4
-
-After a restart you'll see that you ESP32 first gets a token and then gets the data. Every step is traced in the console logs.
+Au prochain redémarrage, vous verrez dans les logs que votre ESP32 récupère un token puis les données des API activées.
 
     RTE: Token - abcdefghiL23OeISCK50tsGKzYD60hUt2TeESE1kBEe38x0MH0apF0y valid for 7200 seconds
     RTE: Ecowatt - Success 200
     RTE: Tempo - Update done (2/1/1)
 
-Tempo, Pointe and Ecowatt data are published as SENSOR data :
+Les données RTE sont publiées sous des sections spécifiques sous **tele/SENSOR** :
 
-    your-device/tele/SENSOR = {"Time":"2023-12-20T07:23:39","TEMPO":{"Hier":"blanc","Aujour":"bleu","Demain":"rouge","Icon":"🟦"}}
+    your-device/tele/SENSOR = {"Time":"2023-12-20T07:23:39",TEMPO":{"lv":1,"hp":0,"label":"blue","icon":"🟦","yesterday":1,"today":1,"tomorrow":1}}
 
-    your-device/tele/SENSOR = {"Time":"2023-12-20T07:36:02","POINTE":{"Aujour":0,"Demain":0,"Icon":"🟩"}}
+    your-device/tele/SENSOR = {"Time":"2023-12-20T07:36:02","POINTE":{"lv":1,"label":"blue","icon":"🟦","today":1,"tomorrow":1}}
 
     your-device/tele/SENSOR = {"Time":"2022-10-10T23:51:09","ECOWATT":{"dval":2,"hour":14,"now":1,"next":2,
       "day0":{"jour":"2022-10-06","dval":1,"0":1,"1":1,"2":1,"3":1,"4":1,"5":1,"6":1,...,"23":1},
@@ -227,18 +239,71 @@ Tempo, Pointe and Ecowatt data are published as SENSOR data :
       "day2":{"jour":"2022-10-08","dval":3,"0":1,"1":1,"2":1,"3":1,"4":1,"5":3,"6":1,...,"23":1},
       "day3":{"jour":"2022-10-09","dval":2,"0":1,"1":1,"2":1,"3":2,"4":1,"5":1,"6":1,...,"23":1}}}
 
-## TCP server
+## Intégration Domotique
 
-This firmware brings a minimal embedded TCP server.
+Il est possible de génerer des messages d'**auto-découverte** à destination de plusieurs solutions d'assistants domotiques.
 
-This server allows you to retrieve the complete teleinfo stream over your LAN.
+Ces messages sont émis après la réception de quelques messages complets. Cela permet d'émettre des données correspondant exactement au contrat lié au compteur raccordé.
 
-Type **tcp_help** to list all available commands :
+### Intégration Domoticz
+
+Ce firmware intègre l'auto-découverte à destination de [**Domoticz**](https://www.domoticz.com/)
+
+La configuration des messages émis doit être réalisée en mode console :
+
+    domo_help
+    HLP: commands for Teleinfo Domoticz integration
+    domo_enable <0> = enable/disable Domoticz integration (0/1)
+    domo_key <num,idx> = set key num to index idx
+             <0,index>  : index Domoticz du total Wh (hc/hp) et puissance active W pour la 1ère période du contrat (base,hc/hp,ejp,bleu)
+             <1,index>  : index Domoticz du total Wh (hc/hp) et puissance active W pour la 1ère période du contrat (blanc)
+             <2,index>  : index Domoticz du total Wh (hc/hp) et puissance active W pour la 1ère période du contrat (rouge)
+             <8,index>  : index Domoticz du total Wh (hc/hp) et puissance active W pour la production
+             <9,index>  : index Domoticz de l'alerte de publication hc/hp
+             <10,index> : index Domoticz de l'alerte de publication de la couleur actuelle (bleu, blanc, rouge)
+             <11,index> : index Domoticz de l'alerte de publication de la couleur du lendemain (bleu, blanc, rouge)
+
+
+### Intégration Home Assistant
+
+Ce firmware intègre l'auto-découverte à destination de [**Home Assistant**](https://www.home-assistant.io/)
+
+Cette intégration peut être activée via le menu **Configuration / Teleinfo** ou en mode console : 
+
+    hass_enable 1
+
+A chaque boot, toutes les données candidates à intégration dans **Home Assistant** sont émises via MQTT en mode **retain** .
+
+Dans le cas particulier du Wenky, les messages d'auto-découverte ne sont pas émis au réveil s'il ne dispose pas d'une alimentation fixe via USB.
+
+Suite à l'émission des messages d'auto-découverte, dans Home Assistant vous devriez avoir un device ressemblant à ceci :
+
+![Home Assistant integration](./screen/tasmota-ha-integration.png)
+
+### Intégration Homie
+
+Ce firmware intègre l'auto-découverte à destination des solutions utilisant le protocole [**Homie**](https://homieiot.github.io/)
+
+Cette intégration peut être activée via le menu **Configuration / Teleinfo** ou en mode console : 
+
+    homie_enable 1
+ 
+A chaque boot, toutes les données candidates à intégration dans un client **Homie** sont émises via MQTT en mode **retain**.
+
+Dans le cas particulier du Wenky, les messages d'auto-découverte ne sont pas émis au réveil s'il ne dispose pas d'une alimentation fixe via USB. Seuls les messages de publication des données sont émis.
+
+## Serveur TCP
+
+Un serveur **TCP** est intégré à cette version de firmware.
+
+Il permet de récupérer très simplement le flux d'information publié par le compteur. Il est à noter que ce flux envoie toutes les données recues, sans aucune correction d'erreur.
+
+La commande **tcp_help** explique toutes les possibilités :
   * **tcp_status** : status of TCP server (running port or 0 if not running)
   * **tcp_start** [port] : start TCP server on specified port
   * **tcp_stop** : stop TCP server
 
-When started, you can now receive your Linky teleinfo stream in real time on any Linux pc :
+Une fois le serveur activé, la réception du flux sur un PC sous Linux est un jeu d'enfant (ici sur le port 888) :
 
     # nc 192.168.1.10 8888
         SMAXSN-1	E220422144756	05210	W
@@ -248,62 +313,78 @@ When started, you can now receive your Linky teleinfo stream in real time on any
         STGE	003A0001	:
         MSG1	PAS DE          MESSAGE         	<
 
-Server allows only 1 concurrent connexion. Any new client will kill previous one.
+Le serveur étant minimaliste, il ne permet qu'une seule connexion simultanée. Toute nouvelle connexion tuera la connexion précédente.
 
-## FTP server
+## Serveur FTP
 
-If you are using a build with a LittleFS partition, you can access the partition thru a very basic FTP server embedded in this firmware.
+Si vous utilisez une version de firmware avec partition LittleFS, vous avez à disposition un serveur **FTP** embarqué afin de récupérer les fichiers de manière automatisée.
 
-This can allow you to retrieve automatically any CSV generated file.
-
-Type **ftp_help** to list all available commands :
+La commande **ftp_help** liste toutes les possibilités :
   * **ftp_status** : status of FTP server (running port or 0 if not running)
   * **ftp_start** : start FTP server on port 21
   * **ftp_stop** : stop FTP server
 
-On the client side, credentials are :
-  * login : **teleinfo**
-  * password : **teleinfo**
+Coté client FTP, vous devez utiliser les login / mot de passe suivants : **teleinfo** / **teleinfo**
 
-This embedded FTP server main limitation is that it can only one connexion at a time. \
-So you need to limit simultaneous connexions to **1** on your FTP client. Otherwise, connexion will fail.
+Ce serveur FTP ne peut accepter qu'une seule connexion simultanée. Vous devez donc configurer votre client FTP avec une limite de type : **simultaneous connexions = 1**. Sinon, la connexion sera en erreur.
+
+## Carte Winky
+
+La carte [Winky](https://gricad-gitlab.univ-grenoble-alpes.fr/ferrarij/winky) développée par l'université de Grenoble avec Charles Hallard fonctionne de manière un peu particulière car elle peut être auto-alimentée par le compteur Linky à l'aide d'une super-capacité.
+
+Elle peut être alimentée en continu par le port USB ou directement par le compteur Linky. Dans ce cas, elle se réveille régulièrement pour lire les données du compteur, les envoyer via MQTT et se rendort ensuite en mode **deep sleep** le temps de recharger la super capacité qui sera utilisée lors du prochain réveil.
+
+Typiquement, après configuration en alimentation USB, le Winky doit être programmé en mode console afin d'activer le mode **deep sleep**. Ceci se fait à travers la console tasmota :
+
+    deepsleeptime xxx
+
+où **xxx** représente le nombre de secondes entre 2 réveils. Un minimum de 60 (secondes) est préconisé et il faut éviter 300 qui définit un mode de fonctionnement spécifique de Tasmota. Si la super capacité n'est pas assez rechargée lors du prochain réveil, l'ESP se rendort pour un cycle supplémentaire.
 
 ## Compilation
 
-If you want to compile this firmware version, you just need to :
-1. install official tasmota sources (please get exact version given at the beginning of this page)
-2. place or replace files from this repository
-3. place specific files from **tasmota/common** repository
-4. install **FTPClientServer** and **ArduinoJson** libraries
+Si vous voulez compiler ce firmware vous-même, vous devez :
+1. installer les sources **tasmota** officielles (utilisez la même version que celle déclarée en tête de cette page
+2. déposez ou remplacez les fichiers de ce **repository**
+3. déposez ou remplacez les fichiers du repository **tasmota/common**
+4. installez les librairies **FTPClientServer** et **ArduinoJson**
 
-Here is where you should place different files.
-Files should be taken from this repository and from **tasmota/common** :
+Voici la liste exhaustive des fichiers concernés :
+
 | File    |  Comment  |
 | --- | --- |
 | **platformio_override.ini** |    |
-| tasmota/**user_config_override.h**  |    |
 | partition/**esp32_partition_4M_app1800k_fs1200k.csv** | Safeboot partitioning to get 1.3Mb FS on 4Mb ESP32   |
 | partition/**esp32_partition_8M_app3M_fs4M.csv** | Safeboot partitioning to get 4Mb FS on 8Mb ESP32   |
 | partition/**esp32_partition_16M_app3M_fs12M.csv** | Safeboot partitioning to get 12Mb FS on 16Mb ESP32   |
+| boards/**esp8266_4M2M.json** | ESP8266 4Mb boards  |
 | boards/**esp8266_16M14M.json** | ESP8266 16Mb boards  |
 | boards/**esp32_4M1200k.json** | ESP32 4Mb boards  |
-| boards/**esp32s2_4M1200k.json** | ESP32S2 4Mb boards  |
+| boards/**esp32c3_4M1200k.json** | ESP32 C3 4Mb boards  |
+| boards/**esp32c6_winky.json** | ESP32 S3 16Mb boards  |
+| boards/**esp32s2_4M1200k.json** | ESP32 S2 4Mb boards  |
+| boards/**esp32s3_4M1200k-safeboot.json** | ESP32 S3 4Mb boards  |
+| boards/**esp32s3_16M12M-safeboot.json** | ESP32 S3 16Mb boards  |
 | boards/**denkyd4_8M4M-safeboot.json** | ESP32 Denky D4 8Mb boards  |
-| boards/**esp32s3_16M12M-safeboot.json** | ESP32S3 16Mb boards  |
+| lib/default/**ArduinoJSON** | JSON handling library used by Ecowatt server, extract content of **ArduinoJson.zip** |
+| lib/default/**FTPClientServer** | FTP server library, extract content of **FTPClientServer.zip** |
+| tasmota/**user_config_override.h**  |    |
 | tasmota/include/**tasmota_type.h** | Redefinition of teleinfo structure |
-| tasmota/tasmota_nrg_energy/**xnrg_15_teleinfo.ino** | Teleinfo driver  |
+| tasmota/tasmota_nrg_energy/**xnrg_15_teleinfo.ino** | Teleinfo energy driver  |
 | tasmota/tasmota_drv_driver/**xdrv_01_9_webserver.ino** | Add compilation target in footer  |
 | tasmota/tasmota_drv_driver/**xdrv_94_ip_address.ino** | Fixed IP address Web configuration |
 | tasmota/tasmota_drv_driver/**xdrv_96_ftp_server.ino** | Embedded FTP server |
 | tasmota/tasmota_drv_driver/**xdrv_97_tcp_server.ino** | Embedded TCP stream server |
-| tasmota/tasmota_drv_driver/**xdrv_98_esp32_board.ino** | Configuration of Ethernet ESP32 boards |
-| tasmota/tasmota_sns_sensor/**xsns_104_teleinfo_graph.ino** | Teleinfo Graphs |
-| tasmota/tasmota_sns_sensor/**xsns_119_rte_server.ino** | RTE Tempo and Ecowatt data collection |
-| tasmota/tasmota_sns_sensor/**xsns_126_timezone.ino** | Timezone Web configuration |
-| lib/default/**ArduinoJSON** | JSON handling library used by Ecowatt server, extract content of **ArduinoJson.zip** |
-| lib/default/**FTPClientServer** | FTP server library, extract content of **FTPClientServer.zip** |
+| tasmota/tasmota_drv_energy/**xdrv_115_teleinfo.ino** | Teleinfo driver  |
+| tasmota/tasmota_drv_energy/**xdrv_116_integration_domoticz.ino** | Teleinfo domoticz integration  |
+| tasmota/tasmota_drv_energy/**xdrv_117_integration_hass.ino** | Teleinfo home assistant integration  |
+| tasmota/tasmota_drv_energy/**xdrv_118_integration_homie.ino** | Teleinfo homie protocol integration  |
+| tasmota/tasmota_sns_sensor/**xsns_99_timezone.ino** | Timezone Web configuration |
+| tasmota/tasmota_sns_sensor/**xsns_119_rte_server.ino** | RTE Tempo, Pointe and Ecowatt data collection |
+| tasmota/tasmota_sns_sensor/**xsns_124_teleinfo_histo.ino** | Teleinfo sensor to handle historisation |
+| tasmota/tasmota_sns_sensor/**xsns_125_teleinfo_curve.ino** | Teleinfo sensor to handle curves |
+| tasmota/tasmota_sns_sensor/**xsns_126_teleinfo_winky.ino** | Handling of Winky and deep sleep mode |
 
-If everything goes fine, you should be able to compile your own build.
+Si tout se passe bien, vous devriez pouvoir compiler votre propre build.
 
 ## Adapter
 
@@ -339,7 +420,7 @@ If you want to remove default Tasmota energy display, you just need to run this 
 
     websensor3 0
 
-## Configuration##
+## Configuration
 
 ![Config page](./screen/tasmota-teleinfo-config.png)
 

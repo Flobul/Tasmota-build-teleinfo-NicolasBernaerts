@@ -1,5 +1,5 @@
 /*
-  xsns_120_timezone.ino - Timezone management (~3.2 kb)
+  xsns_99_timezone.ino - Timezone management (~3.2 kb)
   
   Copyright (C) 2020  Nicolas Bernaerts
     04/04/2020 - v1.0 - Creation 
@@ -28,7 +28,7 @@
 
 #ifdef USE_TIMEZONE
 
-#define XSNS_120                  120
+#define XSNS_99                   99
 
 // commands
 #define D_CMND_TIMEZONE_NTP       "ntp"
@@ -55,6 +55,9 @@ const char D_TIMEZONE_OFFSET[] PROGMEM = "Offset to GMT (mn)";
 const char D_TIMEZONE_MONTH[]  PROGMEM = "Month (1:jan ... 12:dec)";
 const char D_TIMEZONE_WEEK[]   PROGMEM = "Week (0:last ... 4:fourth)";
 const char D_TIMEZONE_DAY[]    PROGMEM = "Day of week (1:sun ... 7:sat)";
+
+// time icons
+const char kTimezoneIcons[] PROGMEM = "🕛|🕧|🕐|🕜|🕑|🕝|🕒|🕞|🕓|🕟|🕔|🕠|🕕|🕡|🕖|🕢|🕗|🕣|🕘|🕤|🕙|🕥|🕚|🕦";
 
 // timezone setiing commands
 const char kTimezoneCommands[] PROGMEM = "tz_|help|pub|ntp|stdo|stdm|stdw|stdd|dsto|dstm|dstw|dstd";
@@ -207,11 +210,37 @@ void CmndTimezoneDstD ()
 // append local time to main page
 void TimezoneWebSensor ()
 {
-  TIME_T current_dst;
+  uint8_t index;
+  TIME_T  current_dst;
+  char    str_icon[8];
 
-  // dislay local time
-  BreakTime (LocalTime (), current_dst);
-  WSContentSend_PD (PSTR ("<div style='text-align:center;'>%02d:%02d:%02d</div>\n"), current_dst.hour, current_dst.minute, current_dst.second);
+  if (RtcTime.valid)
+  {
+    // get local time
+    BreakTime (LocalTime (), current_dst);
+
+    // get time icon
+    index = 2 * (current_dst.hour % 12);
+    if (current_dst.minute >= 45) index = index + 2;
+      else if (current_dst.minute >= 15) index = index + 1;
+    index = index % 24;
+    GetTextIndexed (str_icon, sizeof (str_icon), index, kTimezoneIcons);
+  }
+
+  else strcpy (str_icon, "❌");
+
+  // begin
+  WSContentSend_P (PSTR ("<div style='text-align:center;padding:0px;margin:5px 0px;'>\n"));
+  WSContentSend_P (PSTR ("<div style='display:flex;margin:2px 0px 6px 0px;padding:0px;'>\n"));
+  WSContentSend_P (PSTR ("<div style='width:15%%;padding:0px;font-size:20px;'>%s</div>\n"), str_icon);
+
+  // time
+  if (RtcTime.valid) WSContentSend_P (PSTR ("<div style='width:70%%;padding:1px 0px;font-size:16px;font-weight:bold;'>%02d:%02d:%02d</div>\n"), current_dst.hour, current_dst.minute, current_dst.second);
+    else WSContentSend_P (PSTR ("<div style='width:70%%;padding:1px 0px;font-size:14px;font-weight:bold;'>Waiting fot NTP<br>(check DNS server)</div>\n"));
+
+  // end
+  WSContentSend_P (PSTR ("<div style='width:15%%;padding:0px;'></div>\n"));
+  WSContentSend_P (PSTR ("</div></div>\n"));
 }
 
 #ifdef USE_TIMEZONE_WEB_CONFIG
@@ -301,7 +330,7 @@ void TimezoneWebPageConfigure ()
 
   // save button  
   // --------------
-  WSContentSend_P (PSTR ("<p><button name='save' type='submit' class='button bgrn'>%s</button></p>\n"), D_SAVE);
+  WSContentSend_P (PSTR ("<br><p><button name='save' type='submit' class='button bgrn'>%s</button></p>\n"), D_SAVE);
   WSContentSend_P (PSTR ("</form>\n"));
 
   // configuration button
@@ -319,7 +348,7 @@ void TimezoneWebPageConfigure ()
  *                      Interface
 \***********************************************************/
 
-bool Xsns120 (uint32_t function)
+bool Xsns99 (uint32_t function)
 {
   bool result = false;
 
