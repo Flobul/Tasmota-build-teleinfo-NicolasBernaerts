@@ -86,8 +86,6 @@ jobs:
           mv ./tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv ./xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
           mv ./xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
-          mv ./xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
-          mv ./xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
           mv ./xdrv_115_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xsns_115_teleinfo.ino
           mv ./xdrv_116_integration_domoticz.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_116_integration_domoticz.ino
           mv ./xdrv_117_integration_hass.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_117_integration_hass.ino
@@ -111,8 +109,7 @@ jobs:
           mv ./board/esp32s2_4M1200k.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2_4M1200k.json
           mv ./board/denkyd4_8M4M-safeboot.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4_8M4M-safeboot.json
           mv ./board/esp32s3_16M12M-safeboot.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3_16M12M-safeboot.json
-          mv ./xdrv_94_ip_address.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_address.ino
-          mv ./xdrv_96_ftp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_96_ftp_server.ino
+          mv ./xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
           mv ./xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
           mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
 
