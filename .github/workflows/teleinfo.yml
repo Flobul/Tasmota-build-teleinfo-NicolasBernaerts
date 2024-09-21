@@ -86,8 +86,19 @@ jobs:
           mv ./tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv ./xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
           mv ./xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
-          mv ./xsns_104_teleinfo_graph.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_104_teleinfo_graph.ino
+          mv ./xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
+          mv ./xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
+          mv ./xdrv_115_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xsns_115_teleinfo.ino
+          mv ./xdrv_116_integration_domoticz.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_116_integration_domoticz.ino
+          mv ./xdrv_117_integration_hass.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_117_integration_hass.ino
+          mv ./xdrv_118_integration_homie.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_118_integration_homie.ino
+          mv ./xdrv_119_integration_thingsboard.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_119_integration_thingsboard.ino
+          mv ./xdrv_120_linky_relay.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_sensor/xdrv_120_linky_relay.ino
+          mv ./xsns_99_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
           mv ./xsns_119_rte_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_119_rte_server.ino
+          mv ./xsns_124_teleinfo_histo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_124_teleinfo_histo.ino
+          mv ./xsns_125_teleinfo_curve.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_125_teleinfo_curve.ino
+          mv ./xsns_126_teleinfo_winky.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_126_teleinfo_winky.ino
 
       - name: Copy common/ Files
         run: |
