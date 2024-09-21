@@ -1,8 +1,5 @@
 {
     "build": {
-      "arduino":{
-        "ldscript": "esp32c3_out.ld"
-      },
       "core": "esp32",
       "extra_flags": "-DESP32_4M -DESP32C3",
       "f_cpu": "160000000L",
@@ -29,7 +26,7 @@
         "flash_extra_images": [
           [
             "0x10000",
-            "variants/tasmota/tasmota32c3-safeboot.bin"
+            "tasmota32c3-safeboot.bin"
           ]
         ]
       },

@@ -1,16 +1,19 @@
 # Firmware Tasmota Teleinfo
 
-⚠️ Depuis la **version 13**, le partitionnement a évolué pour la famille des **ESP32**. Il utilise maintenant le partitionnement standard **safeboot**. Si vous faites une mise à jour ESP32 depuis une version plus ancienne, Vous devez faire un flash **serial**. Si vous faites une mise à jour **OTA** vous pourrez rencontrer des dysfonctionnements.
+⚠️ Ce firmware n'est pas le firmware officiel **Teleinfo** de **Tasmota** publié en 2020 par Charles Hallard. 
 
-A partir du moment où vous disposez d'une version **13+**, vous pouvez bien entendu réaliser les mises à jour en mode **OTA**. Le partitionnement des **ESP8266** n'a pas changé.
+Pour la famille des **ESP32**, merci de faire systématiquement un premier flash en mode **Série** afin de regénérer le partitionnement et d'éviter tout dysfonctionnement. Vous pourrez alors faire toutes les mises à jour suivantes en mode **OTA**.
 
 Le **changelog** général est disponible dans le fichier **user_config_override.h**
 
 ## Presentation
 
-Cette évolution du firmware **Tasmota 13.4.0** permet de :
+Cette évolution du firmware **Tasmota 14.1** permet de :
   * gérer le flux **Teleinfo** des compteurs français (**Linky**, **PME/PMI** et **Emeraude**)
-  * publier les données sous **Domoticz**, **Home Assistant** et **Homie**
+  * gérer les compteurs en mode **Historique** et en mode **Standard**
+  * gérer les compteurs en mode **Consommation** et/ou **Production**
+  * calculer le **Cosφ** en quasi temps réel
+  * publier les données pour **Domoticz**, **Home Assistant**, **Homie** et **Thingsboard**
   * s'abonner aux API RTE **Tempo**, **Pointe** et **Ecowatt**
 
 Ce firmware a été développé et testé sur les compteurs suivants :
@@ -19,8 +22,6 @@ Ce firmware a été développé et testé sur les compteurs suivants :
   * **Linky triphase** en TIC **Historique** & **Standard**
   * **Ace6000 triphase** en TIC **PME/PMI**
   * **Emeraude** en TIC **Emeraude 2 quadrands**
-
-La réception **TIC** intègre une correction d'erreur basée sur le checksum afin de ne traiter que des données fiables.
 
 Il a été compilé et testé sur les ESP suivants :
   * **ESP8266** 1Mb, 4Mb et 16Mb
@@ -33,112 +34,125 @@ Il a été compilé et testé sur les ESP suivants :
 Ce firmware fournit également :
   * un serveur intégré **TCP** pour diffuser en temps réel les données reçues du compteur
   * un serveur intégré **FTP** pour récupérer les fichiers historiques
+  * le suivi en temps réel des trames réçues
+  * un graph en temps réel des données principales (tension, puissance et Cosφ)
+  * suivi historisé de la consommation
+  * suivi historisé de la production
+
+Si votre compteur est en mode historique, la tension est forcée à 230V.
 
 Des versions pré-compilées sont disponibles dans le répertoire [**binary**](./binary).
 
-Ce firmware n'est pas le firmware officiel **Teleinfo** de **Tasmota**. C'est une implémentation complètement différente de celle publiée en 2020 par Charles Hallard. 
-
-Il gère les compteurs en mode consommation et production. 
-
-Ce firmware gère les données suivantes :
-  * Tension (**V**)
-  * Courant (**A**)
-  * Puissance instantanée (**VA**)
-  * Puissance active (**W**)
-  * Facteur de puissance (**Cosφ**)
-  * Compteurs quotidiens et de période (**Wh**)
-
-Il fournit des pages web spécifiques :
-  * **/tic** : suivi en temps réel des données réçues
-  * **/graph** : graph en temps réel des données du compteur
-  * **/conso** : suivi des consommations
-  * **/prod** : suivi de la production
-  
-Si votre compteur est en mode historique, la tension est forcée à 230V.
-
-Si vous souhaitez supprimer l'affichage des données **Energy** sur la page d'accueil, vous devez passer la commande suivante en console :
-
-    websensor3 0
-
 Le protocole **Teleinfo** est décrit dans [ce document](https://www.enedis.fr/sites/default/files/Enedis-NOI-CPT_54E.pdf)
+
+## Fonctionnalités
+
+Suivant le type d'ESP utilisé, toutes les fonctionnalités ne sont pas disponibles.
+
+Voici un tableau récapitulatif des fonctionnalités par famille d'ESP :
+
+|       Fonctionnalité        | ESP8266 1M | ESP8266 4M+ | ESP32 4M+ |
+| --------------------------- | ---------- | ----------- | --------  |
+| IP fixe                     |     x      |      x      |     x     |
+| Calcul Cosφ                 |     x      |      x      |     x     |
+| LED couleur contrat         |     x      |      x      |     x     |
+| Trames temps réel           |     x      |      x      |     x     |
+| Graph temps réel            |     x      |      x      |     x     |
+| Graph historisé             |            |      x      |     x     |
+| Consommation historisée     |            |      x      |     x     |
+| Production historisée       |            |      x      |     x     |
+| Serveur TCP                 |     x      |      x      |     x     |
+| Serveur FTP                 |            |             |     x     |
+| Intégration Home Assistant  |     x      |      x      |     x     |
+| Intégration Domoticz        |     x      |      x      |     x     |
+| Intégration Homie           |     x      |      x      |     x     |
+| Intégration Thingsboard     |     x      |      x      |     x     |
+| Intégration API RTE         |            |             |     x     |
+| Taille max d'une étiquette  |    32      |    32       |    112    |
+| Nombre max d'étiquettes     |    48      |    48       |    74     |
 
 ## Publication MQTT
 
 En complément de la section officielle **ENERGY**, les sections suivantes peuvent être publiées :
   * **METER** : données normalisées de consommation et production en temps réel
-  * **ALERT** : alertes publiées dans les messages STGE (changement Tempo / EJP, surpuissance & survoltage)
-  * **CONTRACT** : données du contrat intégrant les compteurs de périodes en Wh
   * **CAL** : calendrier consolidé entre la publication compteur et les données RTE reçues (Tempo, Pointe et/ou Ecowatt)
   * **RELAY** : relais virtuels publiés par le compteur
+  * **CONTRACT** : données du contrat intégrant les compteurs de périodes en Wh
+  * **ALERT** : alertes publiées dans les messages STGE (changement Tempo / EJP, surpuissance & survoltage)
   * **TIC** : etiquettes et données brutes reçues depuis le compteur
 
 Toutes ces publications sont activables à travers la page **Configuration Teleinfo**.
 
-Données de **consommation** publiées dans la section **METER** :
-
-  * **PH** = nombre de phases (1 ou 3)
-  * **PSUB** = puissance apparente (VA) maximale par phase dans le contrat
-  * **ISUB** = courant (A) maximal par phase dans le contrat 
-  * **PMAX** = puissance apparente (VA) maximale par phase intégrant le pourcentage acceptable
-  * **I** = courant instantané (A) global
-  * **P** = puissance instantanée (VA) globale
-  * **W** = puissance active (W) globale
-  * **C** = facteur de puissance (cos φ)
-  * **TDAY** = Total consommé aujourd'hui (Wh)
-  * **YDAY** = Total consommé hier (Wh)
-
-Données de **consommation** par **phase** publiées dans la section **METER** :
-
-  * **Ix** = courant instantané (A) sur la phase **x** 
-  * **Ux** = tension (V) sur la phase **x** 
-  * **Px** = puissance instantanée (VA) sur la phase **x** 
-  * **Wx** = puissance active (W) sur la phase **x**
-
-Données de **production** publiées dans la section **METER** :
-
-  * **PP** = puissance instantanée (VA) produite
-  * **PW** = puissance active (W) produite
-  * **PC** = facteur de puissance (cos φ) de la production
-  * **PTDAY** = Total produit aujourd'hui (Wh)
-  * **PYDAY** = Total produit hier (Wh)
-
-Voici les données publiées dans la section **CAL** :
-  * **lv** = niveau de la période actuelle (0 inconnu, 1 bleu, 2 blanc, 3 rouge)
-  * **hp** = type de la période courante (0:heure creuse, 1 heure pleine)
-  * **today** = section avec le niveau et le type de chaque heure du jour
-  * **tomorrow** = section avec le niveau et le type de chaque heure du lendemain
-
-Données publiées dans la section **RELAY** :
-  * **R1** = état du relai virtual n°1 (0:ouvert, 1:fermé)
-  * **R2** = état du relai virtual n°2 (0:ouvert, 1:fermé)
-  * .. 
-
-Données publiées dans la section **ALERT** :
-  * **Load** = indicateur de surconsommation (0:pas de pb, 1:surconsommation)
-  * **Volt** = indicateur de surtension (0:pas de pb, 1:au moins 1 phase est en surtension)
-  * **Preavis** = niveau du prochain préavis (utilisé en Tempo & EJP)
-  * **Label** = Libellé du prochain préavis
-
-En complément des données de base du contrat, la section **CONTRAT** liste l'ensemble des périodes dans votre contrat. Seules les périodes avec un total de consommation différent de **0** sont publiées.
+|    Section   |     Clé     |  Valeur   |
+| ------------ | ----------- | ----------- |
+| **METER**    |    PH       | Nombre de phases (1 ou 3)  | 
+|              |   PSUB      | Puissance apparente (VA) maximale par phase dans le contrat    | 
+|              |   ISUB      | Courant (A) maximal par phase dans le contrat    | 
+|              |   PMAX      | Puissance apparente (VA) maximale par phase intégrant le pourcentage acceptable   | 
+|              |     I       | Courant global (A)    | 
+|              |     P       | Puissance apparente globale (VA)   | 
+|              |     W       | Puissance active globale (W)    | 
+|              |     C       | Facteur de puissance (cos φ)   | 
+|              |    I*x*     | Courant (A) sur la phase **_x_**   | 
+|              |    U*x*     | Tension (V) sur la phase **_x_**    | 
+|              |    P*x*     | Puissance apparente (VA) sur la phase **_x_**    | 
+|              |    W*x*     | Puissance active (W) sur la phase **_x_**   | 
+|              |    TDAY     | Puissance totale consommée aujourd'hui (Wh)   | 
+|              |    YDAY     | Puissance totale consommée hier (Wh)   | 
+|              |    PP       | Puissance apparente **produite** (VA) | 
+|              |    PW       | Puissance active **produite** (VA) | 
+|              |    PC       | Facteur de puissance (cos φ) de la **production**  | 
+|              |   PTDAY     | Puissance totale **produite** aujourd'hui (Wh) | 
+|              |   PYDAY     | Puissance totale **produite** hier (Wh) | 
+| **CAL**      |    lv       | Niveau de la période actuelle (0 inconnu, 1 bleu, 2 blanc, 3 rouge)     | 
+|              |    hp       | Type de la période courante (0:heure creuse, 1 heure pleine) | 
+|              |  **tday**   | Section avec le niveau et le type de chaque heure du jour | 
+|              |  **tmrw**   | Section avec le niveau et le type de chaque heure du lendemain | 
+| **RELAY**    |    R1       | Etat du relai virtual n°1 (0:ouvert, 1:fermé)   | 
+|              |    ...      |                                                 | 
+|              |    R8       | Etat du relai virtual n°8 (0:ouvert, 1:fermé)   | 
+|              |    P1       | Etat de la période n°1 (0:inactive, 1:active)   | 
+|              |    L1       | Libellé de la période n°1   | 
+|              |    ...      |                                                 | 
+|              |    P9       | Etat de la période n°9 (0:inactive, 1:active)   | 
+|              |    L9       | Libellé de la période n°9   | 
+| **CONTRACT** |   serial    | Numéro de série du compteur    | 
+|              |    name     | Nom du contrat en cours        | 
+|              |   period    | Nom de la periode en cours     | 
+|              |    color    | Couleur de la periode en cours     | 
+|              |    hour     | Type de la periode en cours     | 
+|              |    CONSO    | Compteur global (Wh) de l'ensemble des périodes de consommation    | 
+|              |  *PERIODE*  | Compteur total (Wh) de la période de consommation *PERIODE*      | 
+|              |    PROD     | Compteur global (Wh) de la production    | 
+| **ALERT**    |    Load     | Indicateur de surconsommation (0:pas de pb, 1:sur-consommation)     | 
+|              |    Volt     | Indicateur de surtension (0:pas de pb, 1:au moins 1 phase est en surtension)    | 
+|              |   Preavis   | Niveau du prochain préavis (utilisé en Tempo & EJP)     | 
+|              |    Label    | Libellé du prochain préavis    | 
 
 ## Commands
 
 Ce firmware propose un certain nombre de commandes **EnergyConfig** spécifiques disponibles en mode console :
 
-    EnergyConfig Teleinfo parameters :
-      historique      set historique mode at 1200 bauds (needs restart)
-      standard        set standard mode at 9600 bauds (needs restart)
-      stats           display reception statistics
-      percent=100     maximum acceptable % of total contract
-      msgpol=1        message policy : 0=Every TIC, 1=± 5% Power Change, 2=Telemetry only
-      msgtype=1       message type : 0=None, 1=METER only, 2=TIC only, 3=METER and TIC
-      maxv=240        graph max voltage (V)
-      maxva=9000      graph max power (VA or W)
-      nbday=8         number of daily logs
-      nbweek=4        number of weekly logs
-      maxhour=8       graph max total per hour (Wh)
-      maxday=110      graph max total per day (Wh)
-      maxmonth=2000   graph max total per month (Wh)
+      historique   set historique mode at 1200 bauds (needs restart)
+      standard     set Standard mode at 9600 bauds (needs restart)
+      stats        display reception statistics
+      reset        reset contract data
+      error=0      display error counters on home page
+      percent=100  maximum acceptable contract (%)
+      
+      policy=1     message policy : 0=Telemetrie seulement, 1=± 5% Evolution puissance, 2=Tous les messages TIC
+      meter=1      publish METER & PROD data
+      contract=1   publish CONTRACT data
+      calendar=1   publish CAL data
+      relay=1      publish RELAY data
+      
+      maxv=235     graph max voltage (V)
+      maxva=3000  graph max power (VA or W)
+      nbday=8      number of daily logs
+      nbweek=4     number of weekly logs
+      maxhour=2    graph max total per hour (Wh)
+      maxday=10    graph max total per day (Wh)
+      maxmonth=100 graph max total per month (Wh)
 
 Vous pouvez passer plusieurs commandes en même temps :
 
@@ -243,7 +257,11 @@ Les données RTE sont publiées sous des sections spécifiques sous **tele/SENSO
 
 Il est possible de génerer des messages d'**auto-découverte** à destination de plusieurs solutions d'assistants domotiques.
 
-Ces messages sont émis après la réception de quelques messages complets. Cela permet d'émettre des données correspondant exactement au contrat lié au compteur raccordé.
+Ces messages sont émis au boot après la réception de quelques messages complets depuis le compteur. Cela permet d'émettre des données correspondant exactement au contrat lié au compteur raccordé.
+
+Avant d'activer l'intégration, il est important de sélectionner et sauvegarder les données que vous souhaitez publier :
+
+![Donnees publiées](./screen/tasmota-teleinfo-config-data.png)
 
 ### Intégration Domoticz
 
@@ -278,7 +296,8 @@ Dans le cas particulier du Wenky, les messages d'auto-découverte ne sont pas é
 
 Suite à l'émission des messages d'auto-découverte, dans Home Assistant vous devriez avoir un device ressemblant à ceci :
 
-![Home Assistant integration](./screen/tasmota-ha-integration.png)
+![Home Assistant integration](./screen/tasmota-ha-integration-1.png)  ![Home Assistant integration](./screen/tasmota-ha-integration-2.png)
+
 
 ### Intégration Homie
 
@@ -291,6 +310,19 @@ Cette intégration peut être activée via le menu **Configuration / Teleinfo** 
 A chaque boot, toutes les données candidates à intégration dans un client **Homie** sont émises via MQTT en mode **retain**.
 
 Dans le cas particulier du Wenky, les messages d'auto-découverte ne sont pas émis au réveil s'il ne dispose pas d'une alimentation fixe via USB. Seuls les messages de publication des données sont émis.
+
+
+### Intégration ThingsBoard
+
+Ce firmware gère la publication des données à destination de la plateforme IoT  [**Thingsboard**](https://thingsboard.io/)
+
+Cette intégration peut être activée via le menu **Configuration / Teleinfo** ou en mode console : 
+
+    tboard_enable 1
+ 
+Voici le paramétrage à appliquer coté **Tasmota** et coté **Thingsboard** pour que les données soient publiées et consommées :
+
+![Tasmota config](./screen/tasmota-thingsboard-config.jpg)  ![Thingsboard device](./screen/thingsboard-device.jpg)  ![Thingsboard credentials](./screen/thingsboard-credentials.jpg)
 
 ## Serveur TCP
 
@@ -319,10 +351,9 @@ Le serveur étant minimaliste, il ne permet qu'une seule connexion simultanée. 
 
 Si vous utilisez une version de firmware avec partition LittleFS, vous avez à disposition un serveur **FTP** embarqué afin de récupérer les fichiers de manière automatisée.
 
-La commande **ftp_help** liste toutes les possibilités :
-  * **ftp_status** : status of FTP server (running port or 0 if not running)
-  * **ftp_start** : start FTP server on port 21
-  * **ftp_stop** : stop FTP server
+Les commandes sont les suivantes :
+  * **ufsftp 2** : démarrage du serveur FTP sur le port 21
+  * **ufsftp 0** : arrêt du serveur FTP
 
 Coté client FTP, vous devez utiliser les login / mot de passe suivants : **teleinfo** / **teleinfo**
 
@@ -353,31 +384,21 @@ Voici la liste exhaustive des fichiers concernés :
 | File    |  Comment  |
 | --- | --- |
 | **platformio_override.ini** |    |
-| partition/**esp32_partition_4M_app1800k_fs1200k.csv** | Safeboot partitioning to get 1.3Mb FS on 4Mb ESP32   |
-| partition/**esp32_partition_8M_app3M_fs4M.csv** | Safeboot partitioning to get 4Mb FS on 8Mb ESP32   |
-| partition/**esp32_partition_16M_app3M_fs12M.csv** | Safeboot partitioning to get 12Mb FS on 16Mb ESP32   |
-| boards/**esp8266_4M2M.json** | ESP8266 4Mb boards  |
-| boards/**esp8266_16M14M.json** | ESP8266 16Mb boards  |
-| boards/**esp32_4M1200k.json** | ESP32 4Mb boards  |
-| boards/**esp32c3_4M1200k.json** | ESP32 C3 4Mb boards  |
-| boards/**esp32c6_winky.json** | ESP32 S3 16Mb boards  |
-| boards/**esp32s2_4M1200k.json** | ESP32 S2 4Mb boards  |
-| boards/**esp32s3_4M1200k-safeboot.json** | ESP32 S3 4Mb boards  |
-| boards/**esp32s3_16M12M-safeboot.json** | ESP32 S3 16Mb boards  |
-| boards/**denkyd4_8M4M-safeboot.json** | ESP32 Denky D4 8Mb boards  |
+| partition/**esp32_partition_xxx.csv** | Specific ESP32 partitionning files   |
+| boards/**espxxx.json** | ESP8266 and ESP32 boards description  |
 | lib/default/**ArduinoJSON** | JSON handling library used by Ecowatt server, extract content of **ArduinoJson.zip** |
-| lib/default/**FTPClientServer** | FTP server library, extract content of **FTPClientServer.zip** |
 | tasmota/**user_config_override.h**  |    |
 | tasmota/include/**tasmota_type.h** | Redefinition of teleinfo structure |
 | tasmota/tasmota_nrg_energy/**xnrg_15_teleinfo.ino** | Teleinfo energy driver  |
 | tasmota/tasmota_drv_driver/**xdrv_01_9_webserver.ino** | Add compilation target in footer  |
-| tasmota/tasmota_drv_driver/**xdrv_94_ip_address.ino** | Fixed IP address Web configuration |
-| tasmota/tasmota_drv_driver/**xdrv_96_ftp_server.ino** | Embedded FTP server |
+| tasmota/tasmota_drv_driver/**xdrv_94_ip_option.ino** | Fixed IP address and misc options Web configuration |
 | tasmota/tasmota_drv_driver/**xdrv_97_tcp_server.ino** | Embedded TCP stream server |
 | tasmota/tasmota_drv_energy/**xdrv_115_teleinfo.ino** | Teleinfo driver  |
 | tasmota/tasmota_drv_energy/**xdrv_116_integration_domoticz.ino** | Teleinfo domoticz integration  |
 | tasmota/tasmota_drv_energy/**xdrv_117_integration_hass.ino** | Teleinfo home assistant integration  |
 | tasmota/tasmota_drv_energy/**xdrv_118_integration_homie.ino** | Teleinfo homie protocol integration  |
+| tasmota/tasmota_drv_energy/**xdrv_119_integration_thingsboard.ino** | Teleinfo Thingsboard protocol integration  |
+| tasmota/tasmota_drv_energy/**xdrv_120_linky_relay.ino** | Management of relays according to periods and virtual relays  |
 | tasmota/tasmota_sns_sensor/**xsns_99_timezone.ino** | Timezone Web configuration |
 | tasmota/tasmota_sns_sensor/**xsns_119_rte_server.ino** | RTE Tempo, Pointe and Ecowatt data collection |
 | tasmota/tasmota_sns_sensor/**xsns_124_teleinfo_histo.ino** | Teleinfo sensor to handle historisation |

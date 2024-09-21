@@ -1,8 +1,5 @@
 {
   "build": {
-    "arduino":{
-      "ldscript": "esp32s2_out.ld"
-    },
     "core": "esp32",
     "extra_flags": "-DBOARD_HAS_PSRAM -DESP32_4M -DESP32S2",
     "f_cpu": "240000000L",
@@ -10,7 +7,7 @@
     "flash_mode": "dio",
     "mcu": "esp32s2",
     "variant": "esp32s2",
-    "partitions": "partitions/esp32_partition_app1856k_fs1344k.csv"
+    "partitions": "partitions/esp32_partition_4M_app1800k_fs1200k.csv"
   },
   "connectivity": [
     "wifi"
@@ -28,7 +25,7 @@
       "flash_extra_images": [
         [
           "0x10000",
-          "variants/tasmota/tasmota32s2-safeboot.bin"
+          "tasmota32s2-safeboot.bin"
         ]
       ]
     },
