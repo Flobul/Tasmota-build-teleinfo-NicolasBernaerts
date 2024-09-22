@@ -473,7 +473,7 @@
 #undef USE_BM8563                           // [I2cDriver59] Enable BM8563 RTC - found in M5Stack - support both I2C buses on ESP32 (I2C address 0x51) (+2.5k code)
 #undef USE_PCF85363                         // [I2cDriver66] Enable PCF85363 RTC - found Shelly 3EM (I2C address 0x51) (+0k7 code)
 
-//#undef USE_DISPLAY                            // Add I2C/TM1637/MAX7219 Display Support (+2k code)
+#define USE_DISPLAY                            // Add I2C/TM1637/MAX7219 Display Support (+2k code)
 #undef USE_DISPLAY_MODES1TO5                // Enable display mode 1 to 5 in addition to mode 0
 #undef USE_DISPLAY_LCD                      // [DisplayModel 1] [I2cDriver3] Enable Lcd display (I2C addresses 0x27 and 0x3F) (+6k code)
 #undef USE_DISPLAY_MATRIX                   // [DisplayModel 3] [I2cDriver5] Enable 8x8 Matrix display (I2C adresseses see below) (+11k code)
@@ -627,16 +627,12 @@
 
 #ifdef ESP32
 
-#define USE_BLE_ESP32
-#define USE_MI_ESP32
-#define USE_IBEACON
 // berry and autoconf
 #define USE_AUTOCONF                           // Enable Esp32 autoconf feature
 //#undef USE_BERRY                              // Enable Berry scripting langage
 
 // display
 #define USE_I2C                                // All I2C sensors and devices
-#define USE_DISPLAY                            // Add Display support
 #undef  USE_DISPLAY_TM1621_SONOFF
 
 //#undef USE_ESP32_SENSORS
@@ -650,9 +646,9 @@
 #define USE_WS2812                             // WS2812 Led string using library NeoPixelBus (+5k code, +1k mem, 232 iram) - Disable by //
 #define USE_ADC                                // Add support for ADC on GPIO32 to GPIO39
 
-#undef USE_BLE_ESP32
-#undef USE_MI_ESP32
-#undef USE_IBEACON
+#define USE_BLE_ESP32
+#define USE_MI_ESP32
+#define USE_IBEACON
 
 #undef USE_SR04
 
@@ -671,4 +667,3 @@
 #undef USE_SENSEAIR   
 
 #endif  // ESP32
-
