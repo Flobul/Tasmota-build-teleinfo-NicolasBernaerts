@@ -33,6 +33,7 @@
 #define RELAY_PRESENT_MAX                 8
 #define RELAY_VIRTUAL_MAX                 8
 #define RELAY_PERIOD_MAX                  8
+#define SET_VIRTUAL_RELAY_TOPIC "linky_relay_topic"
 
 #define D_PAGE_LINKY_RELAY_CONFIG         "lrelay"
 
