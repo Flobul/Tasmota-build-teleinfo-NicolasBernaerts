@@ -113,7 +113,7 @@ void ESP32BoardEverySecond ()
   else if ((Settings->ipv4_address[0] != 0) &&
            (WiFi.localIP() != IPAddress(Settings->ipv4_address[0], Settings->ipv4_address[1], Settings->ipv4_address[2], Settings->ipv4_address[3])) &&
            (EthernetLocalIP() != IPAddress(Settings->ipv4_address[0], Settings->ipv4_address[1], Settings->ipv4_address[2], Settings->ipv4_address[3])) &&
-           (EthernetLocalIP() != IPAddress(0)))
+           (EthernetLocalIP() != IPAddress((uint32_t)0)))  // Cast explicite à uint32_t
   {
       // configure ethernet adapter with fixed IP
       ETH.config(IPAddress(Settings->ipv4_address[0], Settings->ipv4_address[1], Settings->ipv4_address[2], Settings->ipv4_address[3]),
