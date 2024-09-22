@@ -110,13 +110,16 @@ void ESP32BoardEverySecond ()
   }
 
   // else if fixed IP is defined, wifi is not using it, ethernet is different : set fixed IP to ethernet
-  else if ((Settings->ipv4_address[0] != 0) && (WiFi.localIP() != IPAddress(Settings->ipv4_address[0])) && (EthernetLocalIP() != IPAddress(Settings->ipv4_address[0])) && (EthernetLocalIP() != IPAddress(0)))
+  else if ((Settings->ipv4_address[0] != 0) && (WiFi.localIP() != IPAddress(Settings->ipv4_address)) && (EthernetLocalIP() != IPAddress(Settings->ipv4_address)) && (EthernetLocalIP() != IPAddress((uint32_t)0)))
   {
-    // configure ethernet adapter with fixed IP
-    ETH.config (Settings->ipv4_address[0], Settings->ipv4_address[1], Settings->ipv4_address[2], Settings->ipv4_address[3]);
-
-    // log
-    AddLog (LOG_LEVEL_INFO, PSTR ("ETH: IP changed to %s"), EthernetLocalIP ().toString ().c_str ());
+      // configure ethernet adapter with fixed IP
+      ETH.config(IPAddress(Settings->ipv4_address), 
+                 IPAddress(Settings->ipv4_address[1]), 
+                 IPAddress(Settings->ipv4_address[2]), 
+                 IPAddress(Settings->ipv4_address[3]));
+  
+      // log
+      AddLog(LOG_LEVEL_INFO, PSTR("ETH: IP changed to %s"), EthernetLocalIP().toString().c_str());
   }
 }
 
