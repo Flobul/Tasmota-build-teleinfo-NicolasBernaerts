@@ -84,13 +84,8 @@ jobs:
       - name: Copy teleinfo/ Files
         run: |
           cd teleinfo/ && ls -lh
-<<<<<<< HEAD
           mv ./platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
-=======
-          mv ./NicolasBernaerts-tasmota/teleinfo/platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
-          mv ./NicolasBernaerts-tasmota/teleinfo/user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
->>>>>>> c7844e08e46eee6663f9be2a8140d6ff85e1104b
           mv ./NicolasBernaerts-tasmota/teleinfo/tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv ./NicolasBernaerts-tasmota/teleinfo/xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
