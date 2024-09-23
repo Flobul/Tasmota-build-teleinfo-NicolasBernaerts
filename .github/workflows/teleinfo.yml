@@ -44,8 +44,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - './teleinfo/**'
 
 env:
   TASMOTA_VERSION: ${{ inputs.tasmotaVer }}
