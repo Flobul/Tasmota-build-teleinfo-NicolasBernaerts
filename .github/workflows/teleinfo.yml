@@ -71,12 +71,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Get Version
-        id: version
-        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
-
       - name: Download NicolasBernaerts/tasmota git
         run: git clone -b master https://github.com/NicolasBernaerts/tasmota NicolasBernaerts-tasmota
+
+      - name: Get Version
+        id: version
+        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./NicolasBernaerts-tasmota/teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
 
       - name: Download Tasmota git
         run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
