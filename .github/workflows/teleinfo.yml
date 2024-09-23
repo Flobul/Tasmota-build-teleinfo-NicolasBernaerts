@@ -49,7 +49,7 @@ on:
 
 env:
   TASMOTA_VERSION: ${{ inputs.tasmotaVer }}
-  
+
 jobs:
   build:
     name: Build Teleinfo firmware
@@ -75,47 +75,50 @@ jobs:
         id: version
         run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
 
+      - name: Download NicolasBernaerts/tasmota git
+        run: git clone -b master https://github.com/NicolasBernaerts/tasmota NicolasBernaerts-tasmota
+
       - name: Download Tasmota git
         run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
-        
+
       - name: Copy teleinfo/ Files
         run: |
           cd teleinfo/ && ls -lh
           mv ./platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
-          mv ./tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
-          mv ./xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
-          mv ./xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
-          mv ./xdrv_115_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_115_teleinfo.ino
-          mv ./xdrv_116_integration_domoticz.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_116_integration_domoticz.ino
-          mv ./xdrv_117_integration_hass.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_117_integration_hass.ino
-          mv ./xdrv_118_integration_homie.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_118_integration_homie.ino
-          mv ./xdrv_119_integration_thingsboard.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_119_integration_thingsboard.ino
-          mv ./xsns_119_rte_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_119_rte_server.ino
-          mv ./xsns_124_teleinfo_histo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_124_teleinfo_histo.ino
-          mv ./xsns_125_teleinfo_curve.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_125_teleinfo_curve.ino
-          mv ./xsns_126_teleinfo_winky.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_126_teleinfo_winky.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
+          mv ./NicolasBernaerts-tasmota/teleinfo/xnrg_15_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_01_9_webserver.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_115_teleinfo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_115_teleinfo.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_116_integration_domoticz.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_116_integration_domoticz.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_117_integration_hass.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_117_integration_hass.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_118_integration_homie.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_118_integration_homie.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_119_integration_thingsboard.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_119_integration_thingsboard.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_119_rte_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_119_rte_server.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_124_teleinfo_histo.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_124_teleinfo_histo.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_125_teleinfo_curve.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_125_teleinfo_curve.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_126_teleinfo_winky.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_126_teleinfo_winky.ino
 
       - name: Copy common/ Files
         run: |
           cd common/ && ls -lh
-          mv ./partition/esp32_partition_4M_app1800k_fs1200k.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_4M_app1800k_fs1200k.csv
-          mv ./partition/esp32_partition_8M_app3M_fs4M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_8M_app3M_fs4M.csv
-          mv ./partition/esp32_partition_16M_app3M_fs12M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_16M_app3M_fs12M.csv
-          mv ./board/esp8266-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-16M.json
-          mv ./board/esp32-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32-4M.json
-          mv ./board/esp32s2-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2-4M.json
-          mv ./board/denkyd4-8M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4-8M.json
-          mv ./board/esp32s3-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3-16M.json
-          mv ./xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
-          mv ./xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
-          mv ./xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
-          mv ./xsns_99_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
-          mv ./xdrv_120_linky_relay.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/partition/esp32_partition_4M_app1800k_fs1200k.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_4M_app1800k_fs1200k.csv
+          mv ./NicolasBernaerts-tasmota/teleinfo/partition/esp32_partition_8M_app3M_fs4M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_8M_app3M_fs4M.csv
+          mv ./NicolasBernaerts-tasmota/teleinfo/partition/esp32_partition_16M_app3M_fs12M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_16M_app3M_fs12M.csv
+          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp8266-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-16M.json
+          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp32-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32-4M.json
+          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp32s2-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2-4M.json
+          mv ./NicolasBernaerts-tasmota/teleinfo/board/denkyd4-8M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4-8M.json
+          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp32s3-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3-16M.json
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_99_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_120_linky_relay.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
 
       - name: Add extra file
-        if:  ${{ inputs.addFiles }} 
-        run: ${{ inputs.files }} 
+        if:  ${{ inputs.addFiles }}
+        run: ${{ inputs.files }}
 
       - name: Get git libraries
         run: |
