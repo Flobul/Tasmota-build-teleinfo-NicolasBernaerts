@@ -83,7 +83,6 @@ jobs:
 
       - name: Copy teleinfo/ Files
         run: |
-          cd teleinfo/ && ls -lh
           mv ./platformio_override.ini ../Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./user_config_override.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
           mv ./NicolasBernaerts-tasmota/teleinfo/tasmota_types.h ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
@@ -101,20 +100,19 @@ jobs:
 
       - name: Copy common/ Files
         run: |
-          cd common/ && ls -lh
-          mv ./NicolasBernaerts-tasmota/teleinfo/partition/esp32_partition_4M_app1800k_fs1200k.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_4M_app1800k_fs1200k.csv
-          mv ./NicolasBernaerts-tasmota/teleinfo/partition/esp32_partition_8M_app3M_fs4M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_8M_app3M_fs4M.csv
-          mv ./NicolasBernaerts-tasmota/teleinfo/partition/esp32_partition_16M_app3M_fs12M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_16M_app3M_fs12M.csv
-          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp8266-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-16M.json
-          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp32-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32-4M.json
-          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp32s2-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2-4M.json
-          mv ./NicolasBernaerts-tasmota/teleinfo/board/denkyd4-8M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4-8M.json
-          mv ./NicolasBernaerts-tasmota/teleinfo/board/esp32s3-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3-16M.json
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_99_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_120_linky_relay.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
+          mv ./NicolasBernaerts-tasmota/common/partition/esp32_partition_4M_app1800k_fs1200k.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_4M_app1800k_fs1200k.csv
+          mv ./NicolasBernaerts-tasmota/common/partition/esp32_partition_8M_app3M_fs4M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_8M_app3M_fs4M.csv
+          mv ./NicolasBernaerts-tasmota/common/partition/esp32_partition_16M_app3M_fs12M.csv ../Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_16M_app3M_fs12M.csv
+          mv ./NicolasBernaerts-tasmota/common/board/esp8266-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-16M.json
+          mv ./NicolasBernaerts-tasmota/common/board/esp32-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32-4M.json
+          mv ./NicolasBernaerts-tasmota/common/board/esp32s2-4M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2-4M.json
+          mv ./NicolasBernaerts-tasmota/common/board/denkyd4-8M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4-8M.json
+          mv ./NicolasBernaerts-tasmota/common/board/esp32s3-16M.json ../Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3-16M.json
+          mv ./NicolasBernaerts-tasmota/common/xdrv_94_ip_option.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
+          mv ./NicolasBernaerts-tasmota/common/xdrv_97_tcp_server.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
+          mv ./NicolasBernaerts-tasmota/common/xdrv_98_esp32_board.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
+          mv ./NicolasBernaerts-tasmota/common/xsns_99_timezone.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
+          mv ./NicolasBernaerts-tasmota/common/xdrv_120_linky_relay.ino ../Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
 
       - name: Add extra file
         if:  ${{ inputs.addFiles }}
