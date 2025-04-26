@@ -101,7 +101,6 @@ jobs:
           mv ./NicolasBernaerts-tasmota/teleinfo/xsns_119_rte_server.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_119_rte_server.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xsns_123_teleinfo_winky.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_123_teleinfo_winky.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xsns_124_teleinfo_graph.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_124_teleinfo_graph.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_125_teleinfo_curve.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_125_teleinfo_curve.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xsns_126_influxdb_extension.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_126_influxdb_extension.ino
 
       - name: Copy common/ Files
