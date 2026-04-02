@@ -229,7 +229,7 @@
 #endif
 
 // complementary modules
-#define USE_IP_OPTION                             // Add IP and common options configuration page (xdrv_94_ip_option.ino)
+//#define USE_IP_OPTION                           // Disabled: superseded by USE_MISC_OPTION (xdrv_99_misc_option.ino); enabling both causes duplicate IPAddressSource enum
 #define USE_MISC_OPTION                           // Add misc and common options configuration page (xdrv_99_misc_option.ino)
 #define USE_TIMEZONE                              // Enable Timezone management
 #define USE_TIMEZONE_WEB_CONFIG                   // Enable timezone web configuration page
@@ -679,7 +679,7 @@
 #define USE_TELEINFO_RTE                      // support for RTE calendars
 #define USE_TELEINFO_AWTRIX                   // support for Awtrix display
 #define USE_TELEINFO_SOLAR                    // support for solar production forecast
-#define USE_RTE_CLIENT                        // support for RTE MQTT client
+//#define USE_RTE_CLIENT                      // Disabled: superseded by USE_TELEINFO_RTE; enabling both causes duplicate kRteCommands, RteCommand, rte_config symbols
 
 // timers and rules
 #define USE_TIMERS                            // support for up to 16 timers
