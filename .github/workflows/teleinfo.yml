@@ -143,6 +143,11 @@ jobs:
           cp ./html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
           cp ./html_uncompressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE3.h
 
+      - name: Patch compatibility issues
+        run: |
+          # D_TIME_OF_DAY is not defined in Tasmota 15.0.1; replace with D_TIMER_TIME which has the same meaning
+          sed -i 's/D_TIME_OF_DAY/D_TIMER_TIME/g' ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
+
       - name: Add extra file
         if:  ${{ inputs.addFiles }}
         run: ${{ inputs.files }}
