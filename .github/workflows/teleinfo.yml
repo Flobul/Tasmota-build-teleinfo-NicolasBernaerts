@@ -92,7 +92,7 @@ jobs:
         run: |
           mv ./platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
           mv ./NicolasBernaerts-tasmota/teleinfo/tasmota.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota.h
-          mv ./NicolasBernaerts-tasmota/teleinfo/user_config_override.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
+          mv ./user_config_override.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
           mv ./NicolasBernaerts-tasmota/teleinfo/tasmota_types.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv ./NicolasBernaerts-tasmota/teleinfo/xnrg_15_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_01_9_webserver.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
@@ -109,8 +109,9 @@ jobs:
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_10_teleinfo_rte.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_10_teleinfo_rte.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_11_teleinfo_awtrix.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_11_teleinfo_awtrix.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_12_teleinfo_winky.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_12_teleinfo_winky.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_13_teleinfo_solar.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_13_teleinfo_solar.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_14_teleinfo_prometheus.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_14_teleinfo_prometheus.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_20_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_20_teleinfo.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_99_misc_option.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_99_misc_option.ino
 
       - name: Copy common/ Files
         run: |
@@ -128,8 +129,11 @@ jobs:
           mv ./NicolasBernaerts-tasmota/common/board/esp8266-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-4M.json
           mv ./NicolasBernaerts-tasmota/common/xdrv_94_ip_option.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
           mv ./NicolasBernaerts-tasmota/common/xdrv_97_tcp_server.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
+          mv ./NicolasBernaerts-tasmota/common/xdrv_97_rte_client.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_rte_client.ino
           mv ./NicolasBernaerts-tasmota/common/xdrv_98_esp32_board.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
+          mv ./NicolasBernaerts-tasmota/common/xdrv_99_misc_option.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_99_misc_option.ino
           mv ./NicolasBernaerts-tasmota/common/xsns_99_timezone.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
+          mv ./NicolasBernaerts-tasmota/common/support_calendar.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_support/support_calendar.ino
           mv ./NicolasBernaerts-tasmota/common/xdrv_120_linky_relay.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
 
       - name: Add extra file
