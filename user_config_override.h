@@ -519,6 +519,7 @@
 #undef USE_DISPLAY_TM1637                   // [DisplayModel 15] Enable TM1637 Module
 #undef USE_DISPLAY_MAX7219                  // [DisplayModel 19] Enable MAX7219 Module
 #undef USE_UNIVERSAL_DISPLAY                   // New universal display driver for both I2C and SPI
+#define USE_DISPLAY_ST7789      
 
 #undef USE_SPI                                // Disable all SPI devices
 
@@ -700,6 +701,64 @@
 #define USE_EQ3_ESP32
 #define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
 
+  #define USE_LVGL_PSRAM                         // Allocate LVGL memory in PSRAM if PSRAM is connected - this might be slightly slower but leaves main memory intact
+  #define USE_LVGL_HASPMOTA                      // Enable OpenHASP compatiblity and Robotocondensed fonts (+90KB flash)
+  #define USE_LVGL_MAX_SLEEP  10                 // max sleep in ms when LVGL is enabled, more than 10ms will make display less responsive
+  #define USE_LVGL_PNG_DECODER                   // include a PNG image decoder from file system (+16KB)
+  #define USE_LVGL_FREETYPE                      // Use the FreeType renderer to display fonts using native TTF files in file system (+77KB flash)
+    #define USE_LVGL_FREETYPE_MAX_FACES 64       // max number of FreeType faces in cache
+  #define USE_LVGL_BG_DEFAULT 0x000000           // Default color for the uninitialized background screen (black)
+  // Disabling select widgets that will be rarely used in Tasmota (-13KB)
+  // Main widgets as defined in LVGL8
+    #define BE_LV_WIDGET_OBJ
+    #define BE_LV_WIDGET_ARC
+    #define BE_LV_WIDGET_ARCLABEL   // LVGL 9.5.0
+    #define BE_LV_WIDGET_BAR
+    #define BE_LV_WIDGET_BTN        // LVGL 8
+    #define BE_LV_WIDGET_BUTTON     // LVGL 9
+    #define BE_LV_WIDGET_BTNMATRIX  // LVGL 8
+    #define BE_LV_WIDGET_BUTTONMATRIX // LVGL 9
+    #define BE_LV_WIDGET_CANVAS
+    #define BE_LV_WIDGET_CHECKBOX
+    #define BE_LV_WIDGET_DROPDOWN
+    #define BE_LV_WIDGET_IMG        // LVGL 8
+    #define BE_LV_WIDGET_IMAGE      // LVGL 9
+    #define BE_LV_WIDGET_LABEL
+    #define BE_LV_WIDGET_LINE
+    #define BE_LV_WIDGET_ROLLER
+    #define BE_LV_WIDGET_SLIDER
+    #define BE_LV_WIDGET_SWITCH
+    #define BE_LV_WIDGET_TABLE
+    // #define BE_LV_WIDGET_TEXTAREA
+
+    // adding ad-hoc colorwheel from LVGL8 to LVGL9
+    #define BE_LV_WIDGET_COLORWHEEL
+
+    #define BE_LV_WIDGET_ANIMIMG
+    #define BE_LV_WIDGET_CHART
+    #define BE_LV_WIDGET_IMGBTN       // LVGL 8
+    #define BE_LV_WIDGET_IMAGEBUTTON  // LVGL 9
+    // #define BE_LV_WIDGET_KEYBOARD
+    #define BE_LV_WIDGET_LED
+    #define BE_LV_WIDGET_LIST
+    // #define BE_LV_WIDGET_MENU
+    #ifdef BE_LV_WIDGET_MENU          // if menu is enabled, also enable sub-element classes
+      #define BE_LV_WIDGET_MENU_CONT
+      #define BE_LV_WIDGET_MENU_PAGE
+      #define BE_LV_WIDGET_MENU_SECTION
+      #define BE_LV_WIDGET_MENU_SEPARATOR
+    #endif // BE_LV_WIDGET_MENU
+    #define BE_LV_WIDGET_METER
+    #define BE_LV_WIDGET_MSGBOX
+    #define BE_LV_WIDGET_QRCODE
+    #define BE_LV_WIDGET_SCALE
+    #define BE_LV_WIDGET_SCALE_SECTION
+    // #define BE_LV_WIDGET_SPINBOX
+    #define BE_LV_WIDGET_SPINNER
+    #define BE_LV_WIDGET_SPANGROUP
+    #define BE_LV_WIDGET_SPAN
+    #define BE_LV_WIDGET_TABVIEW
+
 #undef USE_SR04
 
 #undef USE_WEBCAM
@@ -718,3 +777,9 @@
 
 #endif  // ESP32
 
+#if defined(USE_LVGL) && defined(USE_LVGL_FREETYPE)   // Freetype requires a stack of at least 24KB
+  #if SET_ESP32_STACK_SIZE < (24 * 1024)
+    #undef SET_ESP32_STACK_SIZE
+    #define SET_ESP32_STACK_SIZE (24 * 1024)
+  #endif
+#endif // USE_LVGL && USE_LVGL_FREETYPE
