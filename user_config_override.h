@@ -162,7 +162,22 @@
                          ESP8266 memory optimisation
                          Add Ulanzi remote display management thru Awtrix open-source firmware
     16/03/2025 - v14.10  Correct bug in contract auto-discovery
-                                                
+    01/05/2025 - v14.11  Based on Tasmota 14.6.0
+                         Correct bug in week number calculation for sundays
+                         Cleanup old data files if FS is full
+                         Complete rewrite of speed detection
+                         Add period profile
+    10/08/2025 - v15.0   Refactoring based on Tasmota 15.0
+                         Switch all module to driver to minimize indexes
+                         Add solar production data collection and prediction
+                         Add Prometheus API metrics
+                         Add RTE Tempo Light management
+    25/02/2026 - v15.1   Based on Tasmota 15.2
+                         Handle display for generic PME/PMI, Emeraude and Jaune meters
+                         Add TempoAP7, Pointe Mobile, Week-end and Super Creuses contracts
+                         Add OpenDPE Tempo forecast to RTE module
+                         Add data to InfluxDB integration
+                         Rewrite RGB LED management
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License aStart STGE managements published by
   the Free Software Foundation, either version 3 of the License, or
@@ -205,7 +220,7 @@
 // extension description
 #define EXTENSION_NAME    "Teleinfo"              // name
 #define EXTENSION_AUTHOR  "Nicolas Bernaerts"     // author
-#define EXTENSION_VERSION "14.10"                 // version
+#define EXTENSION_VERSION "15.1"                  // version
 
 // FTP server credentials
 #ifdef USE_FTP
@@ -214,11 +229,16 @@
 #endif
 
 // complementary modules
-#define USE_IP_OPTION                             // Add IP and common options configuration page
+#define USE_IP_OPTION                             // Add IP and common options configuration page (xdrv_94_ip_option.ino)
+#define USE_MISC_OPTION                           // Add misc and common options configuration page (xdrv_99_misc_option.ino)
 #define USE_TIMEZONE                              // Enable Timezone management
 #define USE_TIMEZONE_WEB_CONFIG                   // Enable timezone web configuration page
-#define USE_TCPSERVER                             // Enable TCP server (for TIC to TCP)
-#define USE_RELAY_LINKY                           // Enable Linky virtual relay and period association to local relays
+#define USE_TELEINFO_TCP                          // Enable TCP server (for TIC to TCP)
+#define USE_TELEINFO_RELAY                        // Enable Linky virtual relay and period association to local relays
+
+// web status line
+#define USE_WEB_STATUS_LINE_WIFI                  // enable wifi icon in status line
+#define USE_WEB_STATUS_LINE_LOAD                  // enable load icon in status line
 
 //#define HTTPCLIENT_1_1_COMPATIBLE
 
@@ -227,13 +247,11 @@
 #define USE_TELEINFO_HASS                         // Homered Assistant auto-discovery integration
 #define USE_TELEINFO_HOMIE                        // Homie protocol auto-discovery integration
 #define USE_TELEINFO_THINGSBOARD                  // Thingsboard integration
-#define USE_AWTRIX                                // Awtrix display management
+#define USE_TELEINFO_PROMETHEUS                   // Prometheus metrics API
+#define USE_AWTRIX                                // Awtrix display management (legacy)
 
 // teleinfo display is in French
 #define MY_LANGUAGE        fr_FR
-
-#undef WIFI_NO_SLEEP
-#define WIFI_NO_SLEEP      true                  // [SetOption127] Sets Wifi in no-sleep mode which improves responsiveness on some routers
 
 // devices specificities
 // ---------------------
@@ -308,12 +326,6 @@
 #undef SERIAL_LOG_LEVEL 
 #define SERIAL_LOG_LEVEL   LOG_LEVEL_NONE
 
-#define MDNS_ENABLE false                     // disable multicast DNS
-
-// ----------------------
-// Common ESP8266 & ESP32
-// ----------------------
-
 #define MQTT_DATA_STRING                      // Enable use heap instead of fixed memory for TasmotaGlobal.mqtt_data
 
 #undef FS_SD_MMC                              // disable SD MMC to remove warnings
@@ -362,7 +374,7 @@
 #undef USE_ARILUX_RF                          // Add support for Arilux RF remote controller (+0k8 code, 252 iram (non 2.3.0))
 #undef USE_SHUTTER                            // Add Shutter support for up to 4 shutter with different motortypes (+11k code)
 
-//#undef USE_DEEPSLEEP                          // Add support for deepsleep (+1k code)
+#undef USE_DEEPSLEEP                          // Add support for deepsleep (+1k code)
 
 #undef USE_EXS_DIMMER                         // Add support for ES-Store WiFi Dimmer (+1k5 code)
 #undef USE_HOTPLUG                              // Add support for sensor HotPlug
@@ -662,9 +674,24 @@
 
 #ifdef ESP32
 
+// teleinfo modules for ESP32
+#define USE_TELEINFO_INFLUXDB                 // support for InfluxDB
+#define USE_TELEINFO_RTE                      // support for RTE calendars
+#define USE_TELEINFO_AWTRIX                   // support for Awtrix display
+#define USE_TELEINFO_SOLAR                    // support for solar production forecast
+#define USE_RTE_CLIENT                        // support for RTE MQTT client
+
+// timers and rules
+#define USE_TIMERS                            // support for up to 16 timers
+#define USE_TIMERS_WEB                        // support for timer webpage
+#define USE_SUNRISE                           // support for Sunrise and sunset tools
+
+// watchdog
+#define USE_ESP32_WDT
+
 // berry and autoconf
 #define USE_AUTOCONF                           // Enable Esp32 autoconf feature
-//#undef USE_BERRY                              // Enable Berry scripting langage
+#define USE_BERRY                              // Enable Berry scripting language
 
 // display
 #define USE_I2C                                // All I2C sensors and devices
@@ -685,6 +712,7 @@
 
 #define USE_INFLUXDB                           // InfluxDB integration
 #define USE_WEBCLIENT_HTTPS
+#define USE_WIREGUARD                          // Wireguard VPN client
 
 //#undef USE_ESP32_SENSORS
 
