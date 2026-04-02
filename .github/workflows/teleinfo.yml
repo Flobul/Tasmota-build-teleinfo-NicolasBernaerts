@@ -6,9 +6,13 @@ on:
       tasmotaVer:
         description: 'Major Tasmota Version'
         required: false
-        default: '14.5.0'
+        default: '15.0.1'
         type: choice
         options:
+          - 15.3.0
+          - 15.2.0
+          - 15.1.0
+          - 15.0.1 
           - 14.6.0
           - 14.5.0
           - 14.4.1
@@ -92,16 +96,21 @@ jobs:
           mv ./NicolasBernaerts-tasmota/teleinfo/tasmota_types.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
           mv ./NicolasBernaerts-tasmota/teleinfo/xnrg_15_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
           mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_01_9_webserver.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_110_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_110_teleinfo.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_115_teleinfo_awtrix.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_115_teleinfo_awtrix.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_116_integration_domoticz.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_116_integration_domoticz.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_117_integration_hass.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_117_integration_hass.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_118_integration_homie.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_118_integration_homie.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_119_integration_thingsboard.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_119_integration_thingsboard.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_119_rte_server.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_119_rte_server.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_123_teleinfo_winky.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_123_teleinfo_winky.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_124_teleinfo_graph.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_124_teleinfo_graph.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xsns_126_influxdb_extension.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_126_influxdb_extension.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_00_teleinfo_data.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_00_teleinfo_data.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_01_teleinfo_tcp.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_01_teleinfo_tcp.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_02_teleinfo_graph.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_02_teleinfo_graph.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_03_teleinfo_histo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_03_teleinfo_histo.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_04_teleinfo_relay.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_04_teleinfo_relay.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_05_teleinfo_homie.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_05_teleinfo_homie.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_06_teleinfo_domoticz.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_06_teleinfo_domoticz.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_07_teleinfo_homeassistant.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_07_teleinfo_homeassistant.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_08_teleinfo_thingsboard.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_08_teleinfo_thingsboard.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_09_teleinfo_influxdb.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_09_teleinfo_influxdb.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_10_teleinfo_rte.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_10_teleinfo_rte.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_11_teleinfo_awtrix.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_11_teleinfo_awtrix.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_12_teleinfo_winky.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_12_teleinfo_winky.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_20_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_20_teleinfo.ino
+          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_99_misc_option.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_99_misc_option.ino
 
       - name: Copy common/ Files
         run: |
