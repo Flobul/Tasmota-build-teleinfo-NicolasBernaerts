@@ -136,6 +136,13 @@ jobs:
           mv ./NicolasBernaerts-tasmota/common/support_calendar.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_support/support_calendar.ino
           mv ./NicolasBernaerts-tasmota/common/xdrv_120_linky_relay.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
 
+      - name: Copy html header files
+        run: |
+          cp ./html_compressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
+          cp ./html_compressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE3.h
+          cp ./html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
+          cp ./html_uncompressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE3.h
+
       - name: Add extra file
         if:  ${{ inputs.addFiles }}
         run: ${{ inputs.files }}
