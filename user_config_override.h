@@ -234,6 +234,7 @@
 //#define USE_TIMEZONE                            // Disabled: superseded by USE_MISC_OPTION (xdrv_99_misc_option.ino v2.0+); enabling both causes duplicate kTimezoneCommands/TimezoneCommand/PSTR_TIMEZONE_TITLE symbols
 //#define USE_TIMEZONE_WEB_CONFIG                 // Disabled: see USE_TIMEZONE above
 #define USE_TELEINFO_TCP                          // Enable TCP server (for TIC to TCP)
+#define USE_TELEINFO_HISTO                        // Enable consumption and production historisation
 #define USE_TELEINFO_RELAY                        // Enable Linky virtual relay and period association to local relays
 
 // web status line
