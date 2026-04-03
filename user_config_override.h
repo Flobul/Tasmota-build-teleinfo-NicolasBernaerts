@@ -231,8 +231,8 @@
 // complementary modules
 //#define USE_IP_OPTION                           // Disabled: superseded by USE_MISC_OPTION (xdrv_99_misc_option.ino); enabling both causes duplicate IPAddressSource enum
 #define USE_MISC_OPTION                           // Add misc and common options configuration page (xdrv_99_misc_option.ino)
-#define USE_TIMEZONE                              // Enable Timezone management
-#define USE_TIMEZONE_WEB_CONFIG                   // Enable timezone web configuration page
+//#define USE_TIMEZONE                            // Disabled: superseded by USE_MISC_OPTION (xdrv_99_misc_option.ino v2.0+); enabling both causes duplicate kTimezoneCommands/TimezoneCommand/PSTR_TIMEZONE_TITLE symbols
+//#define USE_TIMEZONE_WEB_CONFIG                 // Disabled: see USE_TIMEZONE above
 #define USE_TELEINFO_TCP                          // Enable TCP server (for TIC to TCP)
 #define USE_TELEINFO_RELAY                        // Enable Linky virtual relay and period association to local relays
 
