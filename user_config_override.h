@@ -703,7 +703,7 @@
 #define USE_LVGL                               // Enable LVGL graphics library (DisplayMode 12)
 #define USE_DISPLAY_LCD                      // [DisplayModel 1] [I2cDriver3] Enable Lcd display (I2C addresses 0x27 and 0x3F) (+6k code)
 #define USE_DISPLAY_SSD1306                  // [DisplayModel 2] [I2cDriver4] Enable SSD1306 Oled 128x64 display (I2C addresses 0x3C and 0x3D) (+16k code)
-//#define USE_DISPLAY_MATRIX                 // [DisplayModel 3] [I2cDriver5] Enable 8x8 Matrix display (+11k code, disabled to reduce flash size)
+#undef USE_DISPLAY_MATRIX                  // [DisplayModel 3] [I2cDriver5] Disable 8x8 Matrix display (+11k code)
   #define USE_DISPLAY_SH1106                   // [DisplayModel 7] [I2cDriver6] Enable SH1106 Oled 128x64 display (I2C addresses 0x3C and 0x3D)
 
 #define USE_INFLUXDB                           // InfluxDB integration
