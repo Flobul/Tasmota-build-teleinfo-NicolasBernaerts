@@ -699,6 +699,8 @@
 #define USE_I2C                                // All I2C sensors and devices
 #define USE_DISPLAY                            // Add Display support
 #define USE_DISPLAY_MODES1TO5                // Enable display mode 1 to 5 in addition to mode 0
+#define USE_UNIVERSAL_DISPLAY                  // New universal display driver for both I2C and SPI
+#define USE_LVGL                               // Enable LVGL graphics library (DisplayMode 12)
 #define USE_DISPLAY_LCD                      // [DisplayModel 1] [I2cDriver3] Enable Lcd display (I2C addresses 0x27 and 0x3F) (+6k code)
 #define USE_DISPLAY_SSD1306                  // [DisplayModel 2] [I2cDriver4] Enable SSD1306 Oled 128x64 display (I2C addresses 0x3C and 0x3D) (+16k code)
 #define USE_DISPLAY_MATRIX                   // [DisplayModel 3] [I2cDriver5] Enable 8x8 Matrix display (I2C adresseses see below) (+11k code)
