@@ -6,7 +6,7 @@ on:
       tasmotaVer:
         description: 'Major Tasmota Version'
         required: false
-        default: '15.0.1'
+        default: '15.1.0'
         type: choice
         options:
           - 15.3.0
@@ -139,8 +139,12 @@ jobs:
       - name: Copy html header files
         run: |
           cp ./html_compressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
+          cp ./html_compressed/HTTP_HEAD_STYLE1.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE1.h
+          cp ./html_compressed/HTTP_HEAD_STYLE2.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE2.h
           cp ./html_compressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE3.h
           cp ./html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
+          cp ./html_uncompressed/HTTP_HEAD_STYLE1.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE1.h
+          cp ./html_uncompressed/HTTP_HEAD_STYLE2.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE2.h
           cp ./html_uncompressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE3.h
 
       - name: Patch compatibility issues
