@@ -701,10 +701,10 @@
 #define USE_DISPLAY_MODES1TO5                // Enable display mode 1 to 5 in addition to mode 0
 #define USE_UNIVERSAL_DISPLAY                  // New universal display driver for both I2C and SPI
 #define USE_LVGL                               // Enable LVGL graphics library (DisplayMode 12)
-#define USE_DISPLAY_LCD                      // [DisplayModel 1] [I2cDriver3] Enable Lcd display (I2C addresses 0x27 and 0x3F) (+6k code)
-#undef USE_DISPLAY_SSD1306                   // [DisplayModel 2] [I2cDriver4] Disable SSD1306 Oled 128x64 display (+16k code, not needed with ST7789/SH1106)
+#undef USE_DISPLAY_LCD                       // [DisplayModel 1] [I2cDriver3] Disable Lcd display (+6k code, not needed with ST7789/LVGL universal display)
+#undef USE_DISPLAY_SSD1306                   // [DisplayModel 2] [I2cDriver4] Disable SSD1306 Oled 128x64 display (+16k code, not needed with ST7789/LVGL)
 #undef USE_DISPLAY_MATRIX                    // [DisplayModel 3] [I2cDriver5] Disable 8x8 Matrix display (+11k code)
-  #define USE_DISPLAY_SH1106                   // [DisplayModel 7] [I2cDriver6] Enable SH1106 Oled 128x64 display (I2C addresses 0x3C and 0x3D)
+#undef USE_DISPLAY_SH1106                    // [DisplayModel 7] [I2cDriver6] Disable SH1106 Oled 128x64 display (not needed with ST7789/LVGL universal display)
 
 #define USE_INFLUXDB                           // InfluxDB integration
 #define USE_WEBCLIENT_HTTPS
