@@ -698,7 +698,7 @@
 // display
 #define USE_I2C                                // All I2C sensors and devices
 #define USE_DISPLAY                            // Add Display support
-#define USE_DISPLAY_MODES1TO5                // Enable display mode 1 to 5 in addition to mode 0
+#undef USE_DISPLAY_MODES1TO5                 // Disable legacy text display modes 1-5 (not needed with LVGL mode 12)
 #define USE_UNIVERSAL_DISPLAY                  // New universal display driver for both I2C and SPI
 #define USE_LVGL                               // Enable LVGL graphics library (DisplayMode 12)
 #undef USE_DISPLAY_LCD                       // [DisplayModel 1] [I2cDriver3] Disable Lcd display (+6k code, not needed with ST7789/LVGL universal display)
