@@ -798,6 +798,10 @@
 #undef USE_MHZ19
 #undef USE_SENSEAIR   
 
+// Disable Dallas DS18x20 temperature sensors to recover +2.6k flash
+// (not needed for teleinfo core functionality; re-enable if temperature probes are used)
+#undef USE_DS18x20
+
 #endif  // ESP32
 
 #if defined(USE_LVGL) && defined(USE_LVGL_FREETYPE)   // Freetype requires a stack of at least 24KB
