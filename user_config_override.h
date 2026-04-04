@@ -755,7 +755,7 @@
     // #define BE_LV_WIDGET_TEXTAREA
 
     // adding ad-hoc colorwheel from LVGL8 to LVGL9
-    #define BE_LV_WIDGET_COLORWHEEL
+    // #define BE_LV_WIDGET_COLORWHEEL              // Disabled: color picker not needed for teleinfo display (-2k flash)
 
     #define BE_LV_WIDGET_ANIMIMG
     #define BE_LV_WIDGET_CHART
@@ -773,7 +773,7 @@
     #endif // BE_LV_WIDGET_MENU
     #define BE_LV_WIDGET_METER
     #define BE_LV_WIDGET_MSGBOX
-    #define BE_LV_WIDGET_QRCODE
+    // #define BE_LV_WIDGET_QRCODE                // Disabled: QR code not needed for teleinfo, saves qrcodegen library (~5k flash)
     #define BE_LV_WIDGET_SCALE
     #define BE_LV_WIDGET_SCALE_SECTION
     // #define BE_LV_WIDGET_SPINBOX
