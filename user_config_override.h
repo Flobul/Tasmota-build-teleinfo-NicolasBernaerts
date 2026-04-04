@@ -729,13 +729,9 @@
 #define USE_WS2812                             // WS2812 Led string using library NeoPixelBus (+5k code, +1k mem, 232 iram) - Disable by //
 #define USE_ADC                                // Add support for ADC on GPIO32 to GPIO39
 
-#ifndef USE_BLE_ESP32
-#define USE_BLE_ESP32                          // Enable full BLE driver
-#endif
-#define USE_EQ3_ESP32
-#ifndef USE_MI_ESP32
-#define USE_MI_ESP32                             // (ESP32 only) Add support for ESP32 as a BLE-bridge (+9k2 mem, +292k flash)
-#endif
+#undef USE_BLE_ESP32
+#undef USE_EQ3_ESP32
+#undef USE_MI_ESP32
 
   #define USE_LVGL_PSRAM                         // Allocate LVGL memory in PSRAM if PSRAM is connected - this might be slightly slower but leaves main memory intact
   #define USE_LVGL_HASPMOTA                      // Enable OpenHASP compatiblity and Robotocondensed fonts (+90KB flash)
