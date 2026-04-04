@@ -716,7 +716,7 @@
 
 #define USE_INFLUXDB                           // InfluxDB integration
 #define USE_WEBCLIENT_HTTPS
-#define USE_WIREGUARD                          // Wireguard VPN client
+//#define USE_WIREGUARD                          // Wireguard VPN client (disabled to reduce flash size)
 
 //#undef USE_ESP32_SENSORS
 
@@ -736,7 +736,7 @@
   #define USE_LVGL_PSRAM                         // Allocate LVGL memory in PSRAM if PSRAM is connected - this might be slightly slower but leaves main memory intact
   #define USE_LVGL_HASPMOTA                      // Enable OpenHASP compatiblity and Robotocondensed fonts (+90KB flash)
   #define USE_LVGL_MAX_SLEEP  10                 // max sleep in ms when LVGL is enabled, more than 10ms will make display less responsive
-  #define USE_LVGL_PNG_DECODER                   // include a PNG image decoder from file system (+16KB)
+  //#define USE_LVGL_PNG_DECODER                   // include a PNG image decoder from file system (+16KB, disabled to reduce flash size)
   #undef USE_LVGL_FREETYPE                       // Disable FreeType TTF font renderer (+77KB flash) - use built-in LVGL fonts instead
   #define USE_LVGL_BG_DEFAULT 0x000000           // Default color for the uninitialized background screen (black)
   // Disabling select widgets that will be rarely used in Tasmota (-13KB)
