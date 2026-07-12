@@ -4,58 +4,31 @@ on:
   workflow_dispatch:
     inputs:
       tasmotaVer:
-        description: 'Major Tasmota Version'
+        description: Tasmota version compatible with Teleinfo
         required: false
-        default: '15.1.0'
+        default: 15.2.0
         type: choice
         options:
-          - 15.3.0
           - 15.2.0
           - 15.1.0
-          - 15.0.1 
-          - 14.6.0
-          - 14.5.0
-          - 14.4.1
-          - 14.4.0
-          - 14.3.0
-          - 14.2.0
-          - 14.1.0
-          - 14.0.0
-          - 13.4.0
-          - 13.3.0
-          - 13.2.0
-          - 13.1.0
-          - 13.0.0
-          - 12.5.0
-          - 12.4.0
-          - 12.3.1
-          - 12.2.0
-          - 12.1.1
-          - 12.1.0
-          - 12.0.2
-          - 12.0.1
-          - 12.0.0
-          - 11.1.0
-          - 11.0.0
-          - 10.1.0
-          - 10.0.0
-          - 9.5.0
-          - 9.4.0
-          - 9.3.1
       addFiles:
-        description: 'True to add files below'
+        description: Run the additional command below
         required: false
+        default: false
         type: boolean
       files:
-        description: 'Command line to add files'
+        description: Additional command to run before compilation
         required: false
         type: string
   push:
     branches:
       - master
 
+permissions:
+  contents: write
+
 env:
-  TASMOTA_VERSION: ${{ inputs.tasmotaVer }}
+  TASMOTA_VERSION: ${{ inputs.tasmotaVer || '15.2.0' }}
 
 jobs:
   build:
@@ -63,123 +36,98 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout build configuration
+        uses: actions/checkout@v4
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
+      - name: Cache PlatformIO dependencies
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/pip
             ~/.platformio/.cache
-          key: ${{ runner.os }}-pio
+          key: ${{ runner.os }}-pio-${{ env.TASMOTA_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-pio-
 
-      - uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.12'
 
-      - name: Download NicolasBernaerts/tasmota git
-        run: git clone -b master https://github.com/NicolasBernaerts/tasmota NicolasBernaerts-tasmota
+      - name: Download latest Nicolas Bernaerts Teleinfo sources
+        run: git clone --depth 1 --branch master https://github.com/NicolasBernaerts/tasmota.git NicolasBernaerts-tasmota
 
-      - name: Get Version
-        id: version
-        run: EXT_VERSION=$(grep -oP '(?<=#define EXTENSION_VERSION ").*(?=")' ./NicolasBernaerts-tasmota/teleinfo/user_config_override.h) && echo "EXT_VERSION=${EXT_VERSION}" >> $GITHUB_ENV
-
-      - name: Download Tasmota git
-        run: git clone -b v${{ env.TASMOTA_VERSION }} https://github.com/arendst/Tasmota.git Tasmota-${{ env.TASMOTA_VERSION }}
-
-      - name: Copy teleinfo/ Files
+      - name: Read Teleinfo source version
+        shell: bash
         run: |
-          mv ./platformio_override.ini ./Tasmota-${{ env.TASMOTA_VERSION }}/platformio_override.ini
-          mv ./NicolasBernaerts-tasmota/teleinfo/tasmota.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota.h
-          mv ./user_config_override.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/user_config_override.h
-          mv ./NicolasBernaerts-tasmota/teleinfo/tasmota_types.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/include/tasmota_types.h
-          mv ./NicolasBernaerts-tasmota/teleinfo/xnrg_15_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xnrg_energy/xnrg_15_teleinfo.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_01_9_webserver.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_00_teleinfo_data.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_00_teleinfo_data.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_01_teleinfo_tcp.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_01_teleinfo_tcp.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_02_teleinfo_graph.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_02_teleinfo_graph.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_03_teleinfo_histo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_03_teleinfo_histo.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_04_teleinfo_relay.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_04_teleinfo_relay.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_05_teleinfo_homie.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_05_teleinfo_homie.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_06_teleinfo_domoticz.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_06_teleinfo_domoticz.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_07_teleinfo_homeassistant.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_07_teleinfo_homeassistant.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_08_teleinfo_thingsboard.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_08_teleinfo_thingsboard.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_09_teleinfo_influxdb.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_09_teleinfo_influxdb.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_10_teleinfo_rte.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_10_teleinfo_rte.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_11_teleinfo_awtrix.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_11_teleinfo_awtrix.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_12_teleinfo_winky.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_12_teleinfo_winky.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_13_teleinfo_solar.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_13_teleinfo_solar.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_14_teleinfo_prometheus.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_14_teleinfo_prometheus.ino
-          mv ./NicolasBernaerts-tasmota/teleinfo/xdrv_98_20_teleinfo.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xdrv_98_20_teleinfo.ino
+          set -euo pipefail
+          config=NicolasBernaerts-tasmota/teleinfo/user_config_override.h
+          extension_version=$(sed -n 's/^#define EXTENSION_VERSION[[:space:]]*"\([^"]*\)".*/\1/p' "$config")
+          test -n "$extension_version"
+          echo "EXT_VERSION=$extension_version" >> "$GITHUB_ENV"
+          echo "EXT_COMMIT=$(git -C NicolasBernaerts-tasmota rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
-      - name: Copy common/ Files
+      - name: Download Tasmota
+        run: git clone --depth 1 --branch "v${TASMOTA_VERSION}" https://github.com/arendst/Tasmota.git "Tasmota-${TASMOTA_VERSION}"
+
+      - name: Install Teleinfo sources in Tasmota
+        shell: bash
         run: |
-          mv ./NicolasBernaerts-tasmota/common/partition/esp32_partition_4M_app1800k_fs1200k.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_4M_app1800k_fs1200k.csv
-          mv ./NicolasBernaerts-tasmota/common/partition/esp32_partition_8M_app3M_fs4M.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_8M_app3M_fs4M.csv
-          mv ./NicolasBernaerts-tasmota/common/partition/esp32_partition_16M_app3M_fs12M.csv ./Tasmota-${{ env.TASMOTA_VERSION }}/partitions/esp32_partition_16M_app3M_fs12M.csv
-          mv ./NicolasBernaerts-tasmota/common/board/denkyd4-8M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/denkyd4-8M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp32-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32-4M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp32c3-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32c3-4M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp32c6-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32c6-4M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp32s2-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s2-4M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp32s3-16M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3-16M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp32s3-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp32s3-4M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp8266-16M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-16M.json
-          mv ./NicolasBernaerts-tasmota/common/board/esp8266-4M.json ./Tasmota-${{ env.TASMOTA_VERSION }}/boards/esp8266-4M.json
-          mv ./NicolasBernaerts-tasmota/common/xdrv_94_ip_option.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_94_ip_option.ino
-          mv ./NicolasBernaerts-tasmota/common/xdrv_97_tcp_server.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_tcp_server.ino
-          mv ./NicolasBernaerts-tasmota/common/xdrv_97_rte_client.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_97_rte_client.ino
-          mv ./NicolasBernaerts-tasmota/common/xdrv_98_esp32_board.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_98_esp32_board.ino
-          mv ./NicolasBernaerts-tasmota/common/xdrv_99_misc_option.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_99_misc_option.ino
-          mv ./NicolasBernaerts-tasmota/common/xsns_99_timezone.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xsns_sensor/xsns_99_timezone.ino
-          mv ./NicolasBernaerts-tasmota/common/support_calendar.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_support/support_calendar.ino
-          mv ./NicolasBernaerts-tasmota/common/xdrv_120_linky_relay.ino ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_120_linky_relay.ino
+          set -euo pipefail
+          source_dir=NicolasBernaerts-tasmota
+          target_dir="Tasmota-${TASMOTA_VERSION}"
 
-      - name: Copy html header files
-        run: |
-          cp ./html_compressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
-          cp ./html_compressed/HTTP_HEAD_STYLE1.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE1.h
-          cp ./html_compressed/HTTP_HEAD_STYLE2.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE2.h
-          cp ./html_compressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_compressed/HTTP_HEAD_STYLE3.h
-          cp ./html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE_ROOT_COLOR.h
-          cp ./html_uncompressed/HTTP_HEAD_STYLE1.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE1.h
-          cp ./html_uncompressed/HTTP_HEAD_STYLE2.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE2.h
-          cp ./html_uncompressed/HTTP_HEAD_STYLE3.h ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/html_uncompressed/HTTP_HEAD_STYLE3.h
+          cp platformio_override.ini "$target_dir/platformio_override.ini"
+          cp teleinfo_esp32s3_16M.csv "$target_dir/partitions/"
+          cp "$source_dir/teleinfo/user_config_override.h" "$target_dir/tasmota/user_config_override.h"
+          cat user_config_additions.h >> "$target_dir/tasmota/user_config_override.h"
+          cp "$source_dir/teleinfo/tasmota.h" "$target_dir/tasmota/include/tasmota.h"
+          cp "$source_dir/teleinfo/tasmota_types.h" "$target_dir/tasmota/include/tasmota_types.h"
+          cp "$source_dir/teleinfo/xdrv_01_9_webserver.ino" "$target_dir/tasmota/tasmota_xdrv_driver/"
+          cp xdrv_01_99_teleinfo_compat.ino "$target_dir/tasmota/tasmota_xdrv_driver/"
+          cp "$source_dir/teleinfo/xnrg_15_teleinfo.ino" "$target_dir/tasmota/tasmota_xnrg_energy/"
 
-      - name: Patch compatibility issues
-        run: |
-          # D_TIME_OF_DAY is not defined in Tasmota 15.0.1; replace with D_TIMER_TIME which has the same meaning
-          sed -i 's/D_TIME_OF_DAY/D_TIMER_TIME/g' ./Tasmota-${{ env.TASMOTA_VERSION }}/tasmota/tasmota_xdrv_driver/xdrv_01_9_webserver.ino
+          # Keep Nicolas Bernaerts' compilation order: core modules first,
+          # integration modules after xdrv_99_misc_option. The numbered _20
+          # dispatcher is obsolete; xdrv_98_teleinfo.ino is the current one.
+          for module in 00 02 03 04 05 15; do
+            cp "$source_dir"/teleinfo/xdrv_98_${module}_*.ino "$target_dir/tasmota/tasmota_xdrv_driver/"
+          done
+          for module in 06 07 08 09 10 11 12 13 14; do
+            cp "$source_dir"/teleinfo/xdrv_98_${module}_*.ino "$target_dir/tasmota/tasmota_xsns_sensor/"
+          done
+          cp "$source_dir/teleinfo/xdrv_98_teleinfo.ino" "$target_dir/tasmota/tasmota_xsns_sensor/"
 
-      - name: Add extra file
-        if:  ${{ inputs.addFiles }}
+          cp "$source_dir"/common/partition/*.csv "$target_dir/partitions/"
+          cp "$source_dir"/common/board/*.json "$target_dir/boards/"
+          cp "$source_dir/common/support_calendar.ino" "$target_dir/tasmota/tasmota_support/"
+          cp "$source_dir/common/xdrv_94_ip_option.ino" "$target_dir/tasmota/tasmota_xdrv_driver/"
+          cp "$source_dir/common/xdrv_97_tcp_server.ino" "$target_dir/tasmota/tasmota_xdrv_driver/"
+          cp "$source_dir/common/xdrv_97_rte_client.ino" "$target_dir/tasmota/tasmota_xdrv_driver/"
+          cp "$source_dir/common/xdrv_99_misc_option.ino" "$target_dir/tasmota/tasmota_xdrv_driver/"
+          cp "$source_dir/common/xsns_99_timezone.ino" "$target_dir/tasmota/tasmota_xsns_sensor/"
+
+      - name: Run additional command
+        if: ${{ inputs.addFiles }}
         run: ${{ inputs.files }}
 
-      - name: Get git libraries
-        run: |
-          git clone https://github.com/bblanchon/ArduinoJson.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/ArduinoJson
-          git clone https://github.com/dplasa/FTPClientServer.git ./Tasmota-${{ env.TASMOTA_VERSION }}/lib/default/FTPClientServer
-
       - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
+        run: python -m pip install --upgrade platformio PyYAML
 
       - name: Compile
-        run: |
-          cd Tasmota-${{ env.TASMOTA_VERSION }} && ls -lh
-          pio run
+        working-directory: Tasmota-${{ env.TASMOTA_VERSION }}
+        run: pio run -e tasmota32-teleinfo
 
-      - name: Display structure of downloaded files
-        run: ls -lR ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware/*
+      - name: List generated firmware
+        run: find "Tasmota-${TASMOTA_VERSION}/build_output/firmware" -maxdepth 1 -type f -printf '%f %k KB\n'
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
         with:
-          files: |
-            ./Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware/*
-          tag_name: "Tasmota-v${{ env.TASMOTA_VERSION }}-TeleinfoExt-${{ env.EXT_VERSION }}"
-          name: "Release Tasmota ${{ env.TASMOTA_VERSION }} - TeleinfoExt-${{ env.EXT_VERSION }}"
-          body: "Release Tasmota ${{ env.TASMOTA_VERSION }} - TeleinfoExt-${{ env.EXT_VERSION }}"
+          files: Tasmota-${{ env.TASMOTA_VERSION }}/build_output/firmware/*
+          tag_name: Tasmota-v${{ env.TASMOTA_VERSION }}-TeleinfoExt-${{ env.EXT_VERSION }}
+          name: Tasmota ${{ env.TASMOTA_VERSION }} - Teleinfo ${{ env.EXT_VERSION }}
+          body: |
+            Tasmota ${{ env.TASMOTA_VERSION }} with Nicolas Bernaerts Teleinfo ${{ env.EXT_VERSION }}.
+            Teleinfo upstream commit: `${{ env.EXT_COMMIT }}`.
           generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
